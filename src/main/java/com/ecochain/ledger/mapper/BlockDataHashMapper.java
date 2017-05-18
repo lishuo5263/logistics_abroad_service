@@ -16,5 +16,5 @@ public interface BlockDataHashMapper {
 
     int updateByPrimaryKey(BlockDataHash record);
     
-    boolean isExistDataHash(String dataHash);
+    Integer isExistDataHash(String dataHash);
 }
