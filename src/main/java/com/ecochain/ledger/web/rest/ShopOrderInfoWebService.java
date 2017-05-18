@@ -165,12 +165,12 @@ public class ShopOrderInfoWebService extends BaseWebService {
             JavaType javaType = objectMapper.getTypeFactory().constructParametricType(List.class, ShopOrderGoods.class);
             objectMapper.configure(DeserializationConfig.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
             shopOrderGood = objectMapper.readValue(shopOrderGoods, javaType);
-            String userstr = SessionUtil.getAttibuteForUser(Base64.getFromBase64(shopOrderGood.get(0).getCsessionid()));
+            /*String userstr = SessionUtil.getAttibuteForUser(Base64.getFromBase64(shopOrderGood.get(0).getCsessionid()));
             JSONObject user = JSONObject.parseObject(userstr);
             if(user == null || !user.containsKey("seeds")){
                 return fastReturn(null, false, "下单失败，登录超时，请重新登陆！", CodeConstant.UNLOGIN);
             }
-            logger.info("sessionKey中用户信息------------>"+user.toJSONString());
+            logger.info("sessionKey中用户信息------------>"+user.toJSONString());*/
             if (!StringUtil.isNotEmpty(String.valueOf(shopOrderGood.get(0).getUserId()))) {
                 return fastReturn(null, false, "订单生成失败，userId参数为空！", CodeConstant.PARAM_ERROR);
             } else if (!StringUtil.isNotEmpty(String.valueOf(shopOrderGood.get(0).getAddressId()))) {
@@ -203,10 +203,9 @@ public class ShopOrderInfoWebService extends BaseWebService {
                     List<Map<String, Object>> result = new ArrayList();
                     shopOrderGood.get(0).setOrderNo(OrderGenerater.generateOrderNo(shopOrderGood.get(0).getUserCode()));
                     shopOrderGood.get(0).setOrderStatus(1);
-                    shopOrderGood.get(0).setUserId(Integer.valueOf(user.getString("id")));
                     shopOrderGood.get(0).setShippingFee(new BigDecimal(0));
                     shopOrderGood.get(0).setIntegralMoney(new BigDecimal(0));
-                    shopOrderGood.get(0).setTradeHash(user.getString("seeds"));
+                    //shopOrderGood.get(0).setTradeHash(user.getString("seeds"));
                     shopOrderGood.get(0).setData(new StringBuffer(shopOrderGoods.substring(0,shopOrderGoods.length()-1)).append(",\"orderNo\":\""+shopOrderGood.get(0).getOrderNo()+"\"").append(",\"bussType\":\"insertOrder\"}").toString());
                     result = this.shopOrderInfoService.insertShopOrder(shopOrderGood);
                     if (result.get(0).get("ErrorInsert") != null) {
