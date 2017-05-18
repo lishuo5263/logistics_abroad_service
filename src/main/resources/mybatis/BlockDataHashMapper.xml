@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ecochain.ledger.mapper.BlockDataHashMapper" >
+  <resultMap id="BaseResultMap" type="com.ecochain.ledger.model.BlockDataHash" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="data_hash" property="dataHash" jdbcType="VARCHAR" />
+    <result column="block_hash" property="blockHash" jdbcType="VARCHAR" />
+    <result column="block_height" property="blockHeight" jdbcType="INTEGER" />
+    <result column="block_create_time" property="blockCreateTime" jdbcType="TIMESTAMP" />
+    <result column="data_create_time" property="dataCreateTime" jdbcType="TIMESTAMP" />
+    <result column="buss_type" property="bussType" jdbcType="VARCHAR" />
+    <result column="sys_code" property="sysCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, data_hash, block_hash, block_height, block_create_time, data_create_time, buss_type, 
+    sys_code
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from block_data_hash
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from block_data_hash
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ecochain.ledger.model.BlockDataHash" >
+    insert into block_data_hash (data_hash, block_hash, 
+      block_height, block_create_time, data_create_time, 
+      buss_type, sys_code)
+    values (#{dataHash,jdbcType=VARCHAR}, #{blockHash,jdbcType=VARCHAR}, 
+      #{blockHeight,jdbcType=INTEGER}, #{blockCreateTime,jdbcType=TIMESTAMP}, #{dataCreateTime,jdbcType=TIMESTAMP}, 
+      #{bussType,jdbcType=VARCHAR}, #{sysCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ecochain.ledger.model.BlockDataHash" >
+    insert into block_data_hash
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="dataHash != null" >
+        data_hash,
+      </if>
+      <if test="blockHash != null" >
+        block_hash,
+      </if>
+      <if test="blockHeight != null" >
+        block_height,
+      </if>
+      <if test="blockCreateTime != null" >
+        block_create_time,
+      </if>
+      <if test="dataCreateTime != null" >
+        data_create_time,
+      </if>
+      <if test="bussType != null" >
+        buss_type,
+      </if>
+      <if test="sysCode != null" >
+        sys_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="dataHash != null" >
+        #{dataHash,jdbcType=VARCHAR},
+      </if>
+      <if test="blockHash != null" >
+        #{blockHash,jdbcType=VARCHAR},
+      </if>
+      <if test="blockHeight != null" >
+        #{blockHeight,jdbcType=INTEGER},
+      </if>
+      <if test="blockCreateTime != null" >
+        #{blockCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dataCreateTime != null" >
+        #{dataCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bussType != null" >
+        #{bussType,jdbcType=VARCHAR},
+      </if>
+      <if test="sysCode != null" >
+        #{sysCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ecochain.ledger.model.BlockDataHash" >
+    update block_data_hash
+    <set >
+      <if test="dataHash != null" >
+        data_hash = #{dataHash,jdbcType=VARCHAR},
+      </if>
+      <if test="blockHash != null" >
+        block_hash = #{blockHash,jdbcType=VARCHAR},
+      </if>
+      <if test="blockHeight != null" >
+        block_height = #{blockHeight,jdbcType=INTEGER},
+      </if>
+      <if test="blockCreateTime != null" >
+        block_create_time = #{blockCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dataCreateTime != null" >
+        data_create_time = #{dataCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bussType != null" >
+        buss_type = #{bussType,jdbcType=VARCHAR},
+      </if>
+      <if test="sysCode != null" >
+        sys_code = #{sysCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ecochain.ledger.model.BlockDataHash" >
+    update block_data_hash
+    set data_hash = #{dataHash,jdbcType=VARCHAR},
+      block_hash = #{blockHash,jdbcType=VARCHAR},
+      block_height = #{blockHeight,jdbcType=INTEGER},
+      block_create_time = #{blockCreateTime,jdbcType=TIMESTAMP},
+      data_create_time = #{dataCreateTime,jdbcType=TIMESTAMP},
+      buss_type = #{bussType,jdbcType=VARCHAR},
+      sys_code = #{sysCode,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="isExistDataHash" parameterType="java.lang.String" resultType="java.lang.Integer">
+     select count(1) from block_data_hash where data_hash = #{dataHash}
+  </select>
+</mapper>
