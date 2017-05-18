@@ -5,10 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.ecochain.ledger.constants.Constant;
 import com.ecochain.ledger.dao.DaoSupport;
 import com.ecochain.ledger.mapper.*;
-import com.ecochain.ledger.model.Page;
-import com.ecochain.ledger.model.PageData;
-import com.ecochain.ledger.model.ShopGoods;
-import com.ecochain.ledger.model.ShopOrderGoods;
+import com.ecochain.ledger.model.*;
 import com.ecochain.ledger.service.*;
 import com.ecochain.ledger.util.Base64;
 import com.ecochain.ledger.util.DateUtil;
@@ -25,10 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component("shopOrderInfoService")
 public class ShopOrderInfoServiceImpl implements ShopOrderInfoService {
@@ -47,7 +41,8 @@ public class ShopOrderInfoServiceImpl implements ShopOrderInfoService {
 
     @Autowired
     private ShopOrderGoodsMapper shopOrderGoodsMapper;
-
+    @Autowired
+    private BlockDataHashMapper blockDataHashMapper;
     @Autowired
     private UsersDetailsMapper usersDetailsMapper;
     @Autowired
@@ -242,7 +237,7 @@ public class ShopOrderInfoServiceImpl implements ShopOrderInfoService {
             }
         }*/
 
-        logger.info("====================测试代码========start================");
+       /* logger.info("====================测试代码========start================");
         String jsonStr = HttpUtil.sendPostData("http://192.168.200.81:8332/get_new_key", "");
         JSONObject keyJsonObj = JSONObject.parseObject(jsonStr);
         PageData keyPd = new PageData();
@@ -262,7 +257,7 @@ public class ShopOrderInfoServiceImpl implements ShopOrderInfoService {
         if(StringUtil.isNotEmpty(json.getString("result"))){
             shopOrderGoods.get(0).setTradeHash(json.getString("result"));
         }
-        logger.info("====================测试代码=======end=================");
+        logger.info("====================测试代码=======end=================");*/
 
        /* String tradeResult=qklLibService.sendDataToSys(shopOrderGoods.get(0).getTradeHash(), Base64.getBase64(shopOrderGoods.get(0).getData()));//此时TradeHash值为seeds
         JSONObject json = JSON.parseObject(tradeResult);
@@ -512,6 +507,11 @@ public class ShopOrderInfoServiceImpl implements ShopOrderInfoService {
             pd.put("logistics_hash",json.getString("result"));
         }
         logger.info("====================测试代码=======end=================");
+        BlockDataHash blockDataHash =new BlockDataHash();
+        blockDataHash.setBussType("deliverGoods");
+        blockDataHash.setDataHash( json.getString("result"));
+        blockDataHash.setBlockCreateTime(new Date());
+        this.blockDataHashMapper.insert(blockDataHash);
         //添加物流信息
         shopOrderLogisticsService.insertSelective(pd, Constant.VERSION_NO);
         //修改订单商品关联表信息（添加物流单号及修改发货状态）
