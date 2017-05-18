@@ -74,6 +74,7 @@ public class BlockChainTask {
                         this.blockDataHashService.insert(blockDataHash);
                     }else if("payNow".equals(data.getString("bussType"))){
                         //HttpTool.doPost("http://localhost:"+servicePort+"/"+serviceName+"/api/rest/shopOrder/payNow", JSON.toJSONString(data)); //insertOrder 此处值应为给区块链的data值
+                        data.put("hash", hash);
                         HttpUtil.postJson("http://localhost:"+servicePort+"/"+serviceName+"/api/rest/shopOrder/payNow", JSON.toJSONString(data));
                         this.blockDataHashService.insert(blockDataHash);
                     }
