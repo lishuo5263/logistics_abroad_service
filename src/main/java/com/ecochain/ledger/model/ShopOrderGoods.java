@@ -28,6 +28,8 @@ public class ShopOrderGoods implements Serializable {
 
     private String tradeHash;
 
+    private String  bussType;
+
     private String consignee;
 
     private String zipCode;
@@ -479,5 +481,13 @@ public class ShopOrderGoods implements Serializable {
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    public String getBussType() {
+        return bussType;
+    }
+
+    public void setBussType(String bussType) {
+        this.bussType = bussType;
     }
 }

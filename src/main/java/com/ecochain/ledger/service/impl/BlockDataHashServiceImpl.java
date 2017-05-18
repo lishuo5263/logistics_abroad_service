@@ -44,7 +44,7 @@ public class BlockDataHashServiceImpl implements BlockDataHashService {
 
     @Override
     public Integer isExistDataHash(String dataHash) throws Exception {
-        return (Integer) dao.findForObject("com.ecochain.ledger.mapper.BlockDataHashMapper.isExistDataHash", dataHash);
+        return (Integer)dao.findForObject("com.ecochain.ledger.mapper.BlockDataHashMapper.isExistDataHash", dataHash);
     }
 
 }
