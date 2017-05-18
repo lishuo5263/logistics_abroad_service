@@ -273,9 +273,9 @@ public class UsersWebService extends BaseWebService {
                 return ar;
             }
             pd.put("account", account);
-            pd.put("user_type", 1);//买家
-            pd.put("mobile_phone", account);//买家
-            pd.put("user_name", account);//买家
+            pd.put("user_type", "7");//境外物流
+            pd.put("mobile_phone", account);
+            pd.put("user_name", account);
             pd.put("status", "1");//会员状态默认启用
             pd.put("password", password);
             pd.put("lastlogin_ip", InternetUtil.getRemoteAddr(request));

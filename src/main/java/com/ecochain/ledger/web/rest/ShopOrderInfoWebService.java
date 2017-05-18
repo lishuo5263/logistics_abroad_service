@@ -899,14 +899,9 @@ public class ShopOrderInfoWebService extends BaseWebService {
             String userstr = SessionUtil.getAttibuteForUser(RequestUtils.getRequestValue(CookieConstant.CSESSIONID, request));
             JSONObject user = JSONObject.parseObject(userstr);
             
-            /*//供应商List
-            List<PageData> supplierList = null;
-            //供应商IDList
-            List<Integer> supplierIdList = new ArrayList<Integer>();*/
             PageData oneSupplier = null;
             if ("4".equals(user.getString("user_type"))) {//供应商
                 //根据user_id查询供应商信息
-//                supplierList = shopOrderInfoService.getSupplierByUserId(String.valueOf(user.get("id")), Constant.VERSION_NO);
                 oneSupplier = shopOrderInfoService.getOneSupplierByUserId(String.valueOf(user.get("id")), Constant.VERSION_NO);
                 if (oneSupplier == null) {
                     logger.error("--------查询商城订单列表-----------根据user_id查找不到供应商信息！");
@@ -915,14 +910,10 @@ public class ShopOrderInfoWebService extends BaseWebService {
                     ar.setErrorCode(CodeConstant.NO_EXISTS);
                     return ar;
                 }
-                /*for(PageData supplier:supplierList){
-                    supplierIdList.add((Integer)supplier.get("id"));
-                }
-                pd.put("supplierList", supplierList);*/
                 pd.put("supplier_id", String.valueOf(oneSupplier.get("id")));
-            } else {
-                pd.put("user_id", String.valueOf(user.get("id")));
-                pd.put("user_type", String.valueOf(user.getString("user_type")));
+            }else if("6".equals(user.getString("user_type"))||"7".equals(user.getString("user_type"))){//6-国内物流 7-境外物流
+                //分页查询商城订单列表
+                pd.put("user_type", user.getString("user_type"));
             }
             
             List<PageData> shopOrderList = shopOrderInfoService.listShopOrderByPage(pd);//查询所有订单
@@ -933,10 +924,9 @@ public class ShopOrderInfoWebService extends BaseWebService {
                     }
                     PageData shopOrder = new PageData();
                     if ("4".equals(user.getString("user_type"))) {//供应商
-//                        shopOrder.put("supplierIdList", supplierIdList);
                         shopOrder.put("supplier_id", String.valueOf(oneSupplier.get("id")));
                     } else {
-                        shopOrder.put("user_id", String.valueOf(user.get("id")));
+//                        shopOrder.put("user_id", String.valueOf(user.get("id")));
                     }
                     shopOrder.put("orderIdList", orderIdList);
                     List<PageData> shopGoods = shopOrderInfoService.getGoodsByOrderId(shopOrder, Constant.VERSION_NO);

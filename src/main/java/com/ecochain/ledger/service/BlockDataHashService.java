@@ -16,5 +16,5 @@ public interface BlockDataHashService {
 
     boolean updateByPrimaryKey(BlockDataHash record) throws Exception;;
     
-    boolean isExistDataHash(String dataHash) throws Exception;;
+    Integer isExistDataHash(String dataHash) throws Exception;;
 }

@@ -1,12 +1,11 @@
 package com.ecochain.ledger.service.impl;
 
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Component;
-
 import com.ecochain.ledger.dao.DaoSupport;
 import com.ecochain.ledger.model.BlockDataHash;
 import com.ecochain.ledger.service.BlockDataHashService;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 @Component("blockDataHashService")
 public class BlockDataHashServiceImpl implements BlockDataHashService {
@@ -44,8 +43,8 @@ public class BlockDataHashServiceImpl implements BlockDataHashService {
     }
 
     @Override
-    public boolean isExistDataHash(String dataHash) throws Exception {
-        return (Integer)dao.findForObject("com.ecochain.ledger.mapper.BlockDataHashMapper.isExistDataHash", dataHash)>0;
+    public Integer isExistDataHash(String dataHash) throws Exception {
+        return (Integer) dao.findForObject("com.ecochain.ledger.mapper.BlockDataHashMapper.isExistDataHash", dataHash);
     }
 
 }

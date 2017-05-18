@@ -23,7 +23,7 @@ import com.ecochain.ledger.util.StringUtil;
  * @描述：定时账户汇总
  */
 @Component
-@EnableScheduling
+//@EnableScheduling
 public class AccHashSummaryTask {
     private Logger logger = Logger.getLogger(AccHashSummaryTask.class);
 	@Autowired
@@ -38,7 +38,7 @@ public class AccHashSummaryTask {
 	 * 创建人 zhangchunming<br>
 	 */
 //	@Scheduled(cron="0/12 * *  * * ?")//配置时间表达式，每12秒执行一次任务
-	@Scheduled(fixedDelay=12000)  ////配置时间表达式，每12秒执行一次任务
+//	@Scheduled(fixedDelay=12000)  ////配置时间表达式，每12秒执行一次任务
 	public void summary() {
 	    logger.debug("---------------------------------------------定时器hash账户汇总------start------"+DateUtil.getCurrDateTime()+"---------------------------------------");
 	    try {
