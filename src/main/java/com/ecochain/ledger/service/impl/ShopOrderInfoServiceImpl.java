@@ -210,7 +210,7 @@ public class ShopOrderInfoServiceImpl implements ShopOrderInfoService {
             result.add(map);
             return result;
         }
-        Integer usersType = this.usersDetailsMapper.selectUserType(shopOrderGoods.get(0).getUserId());
+        /*Integer usersType = this.usersDetailsMapper.selectUserType(shopOrderGoods.get(0).getUserId());
         if (usersType == 0 || usersType == null) { //userType  1-普通会员 2-创业会员
             map.put("ErrorInsertByUsersType", "订单生成失败，usersType参数为空无法确定购买价格！");
             result.add(map);
@@ -220,7 +220,7 @@ public class ShopOrderInfoServiceImpl implements ShopOrderInfoService {
             map.put("ErrorInsertNotAllowByUsersType", "订单生成失败，用户类型只能为普通会员和创业会员，商品无法购买！");
             result.add(map);
             return result;
-        }
+        }*/
         /*if(Integer.valueOf(shopOrderGoods.get(0).getIsPromote()) ==1){
             if(usersType > 1){ //1以上类型的用户不可下单
                 map.put("ErrorInsertNotAllowByUsersType","抱歉，当前账户没有购买此商品的权限，只有普通才能购买哦！");

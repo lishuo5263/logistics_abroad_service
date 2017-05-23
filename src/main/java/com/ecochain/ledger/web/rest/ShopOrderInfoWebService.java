@@ -202,7 +202,7 @@ public class ShopOrderInfoWebService extends BaseWebService {
                     logger.info("--------商城普通下单参数shopOrderGood：" + shopOrderGoods);
                     logBefore(logger, "生成用户ID为： " + shopOrderGood.get(0).getUserId() + "+的订单");
                     List<Map<String, Object>> result = new ArrayList();
-                    shopOrderGood.get(0).setOrderNo(OrderGenerater.generateOrderNo(shopOrderGood.get(0).getUserCode()));
+                    //shopOrderGood.get(0).setOrderNo(OrderGenerater.generateOrderNo(shopOrderGood.get(0).getUserCode()));
                     shopOrderGood.get(0).setOrderStatus(1);
                     shopOrderGood.get(0).setShippingFee(new BigDecimal(0));
                     shopOrderGood.get(0).setIntegralMoney(new BigDecimal(0));
