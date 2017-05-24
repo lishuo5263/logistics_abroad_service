@@ -1,6 +1,17 @@
 package com.ecochain.ledger.Task;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.ecochain.ledger.constants.Constant;
 import com.ecochain.ledger.model.BlockDataHash;
+import com.ecochain.ledger.model.PageData;
+import com.ecochain.ledger.service.BlockDataHashService;
+import com.ecochain.ledger.service.ShopOrderInfoService;
+import com.ecochain.ledger.service.SysGenCodeService;
+import com.ecochain.ledger.util.Base64;
+import com.ecochain.ledger.util.HttpTool;
+import com.ecochain.ledger.util.HttpUtil;
+import com.ecochain.ledger.util.StringUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,15 +19,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.ecochain.ledger.model.PageData;
-import com.ecochain.ledger.service.BlockDataHashService;
-import com.ecochain.ledger.service.ShopOrderInfoService;
-import com.ecochain.ledger.util.Base64;
-import com.ecochain.ledger.util.HttpTool;
-import com.ecochain.ledger.util.HttpUtil;
-import com.ecochain.ledger.util.StringUtil;
+import java.util.List;
 
 /**
  * Created by Lisandro on 2017/5/17.
@@ -35,6 +38,8 @@ public class BlockChainTask {
     private ShopOrderInfoService shopOrderInfoService;
     @Autowired
     private BlockDataHashService blockDataHashService;
+    @Autowired
+    private SysGenCodeService sysGenCodeService;
 
     private Logger logger = Logger.getLogger(BlockChainTask.class);
 
@@ -45,8 +50,15 @@ public class BlockChainTask {
          * 2.然后json解析出hash数据中的data字段
          * 3.取data字段中每个调用区块链接口存入的bussType 进行业务判断后，调用自身系统相对应的接口方法同步数据
          */
+        String kql_url=null;
+        List<PageData> codeList =sysGenCodeService.findByGroupCode("QKL_URL", Constant.VERSION_NO);
+        for(PageData mapObj:codeList){
+            if("QKL_URL".equals(mapObj.get("code_name"))){
+                kql_url = mapObj.get("code_value").toString();
+            }
+        }
         logger.info(">>>>>>>>>>>>> Scheduled  Execute Interface ServiceName:   " +serviceName +" ServicePort:  " +servicePort);
-        String getToDayBlockInfo = HttpTool.doPost("http://192.168.200.85:8332/GetDataList", "100");
+        String getToDayBlockInfo = HttpTool.doPost(""+ kql_url+"/GetDataList", "100");
         JSONObject toDayBlockInfo = JSONObject.parseObject(getToDayBlockInfo);
 //        for (Object resultMsg : toDayBlockInfo.getJSONArray("result")) {
         for (int i = toDayBlockInfo.getJSONArray("result").size()-1;i>=0;i--) {

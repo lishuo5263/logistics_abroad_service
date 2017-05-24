@@ -59,6 +59,8 @@ public class ShopOrderInfoServiceImpl implements ShopOrderInfoService {
     private PayOrderService payOrderService;
     @Autowired
     private QklLibService qklLibService;
+    @Autowired
+    private SysGenCodeService sysGenCodeService;
 
     @Override
     public boolean updateOrderRefundStatus(String orderNo) {
@@ -486,8 +488,15 @@ public class ShopOrderInfoServiceImpl implements ShopOrderInfoService {
         if(StringUtil.isNotEmpty(json.getString("result"))&&!json.getString("result").contains("failure")){
             pd.put("logistics_hash",json.getString("result"));
         }*/
+        String kql_url=null;
+        List<PageData> codeList =sysGenCodeService.findByGroupCode("QKL_URL", Constant.VERSION_NO);
+        for(PageData mapObj:codeList){
+            if("QKL_URL".equals(mapObj.get("code_name"))){
+                kql_url = mapObj.get("code_value").toString();
+            }
+        }
         logger.info("====================测试代码========start================");
-        String jsonStr = HttpUtil.sendPostData("http://192.168.200.81:8332/get_new_key", "");
+        String jsonStr = HttpUtil.sendPostData(""+ kql_url+"/get_new_key", "");
         JSONObject keyJsonObj = JSONObject.parseObject(jsonStr);
         PageData keyPd = new PageData();
         keyPd.put("data",Base64.getBase64((pd.toString())));
@@ -495,13 +504,13 @@ public class ShopOrderInfoServiceImpl implements ShopOrderInfoService {
         keyPd.put("privateKey",keyJsonObj.getJSONObject("result").getString("privateKey"));
         System.out.println("keyPd value is ------------->"+JSON.toJSONString(keyPd));
         //2. 获取公钥签名
-        String signJsonObjStr =HttpUtil.sendPostData("http://192.168.200.81:8332/send_data_for_sign", JSON.toJSONString(keyPd));
+        String signJsonObjStr =HttpUtil.sendPostData(""+ kql_url+"/send_data_for_sign", JSON.toJSONString(keyPd));
         JSONObject signJsonObj = JSONObject.parseObject(signJsonObjStr);
         Map<String, Object> paramentMap =new HashMap<String, Object>();
         paramentMap.put("publickey",keyJsonObj.getJSONObject("result").getString("publicKey"));
         paramentMap.put("data",Base64.getBase64((pd.toString())));
         paramentMap.put("sign",signJsonObj.getString("result"));
-        String result1 = HttpUtil.sendPostData("http://192.168.200.81:8332/send_data_to_sys", JSON.toJSONString(paramentMap));
+        String result1 = HttpUtil.sendPostData(""+ kql_url+"/send_data_to_sys", JSON.toJSONString(paramentMap));
         JSONObject json = JSON.parseObject(result1);
         if(StringUtil.isNotEmpty(json.getString("result"))){
             pd.put("logistics_hash",json.getString("result"));
