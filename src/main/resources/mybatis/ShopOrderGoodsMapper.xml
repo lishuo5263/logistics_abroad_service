@@ -207,7 +207,7 @@
     update shop_order_goods
     set `state` = #{state}
     where 1=1
-    and shop_order_id = #{shop_order_id}
+    and shop_order_no = #{order_no}
 <!--     and goods_id = #{goods_id} -->
     and user_id = #{user_id}
   </update>

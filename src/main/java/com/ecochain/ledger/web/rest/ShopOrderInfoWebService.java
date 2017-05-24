@@ -1379,101 +1379,101 @@ public class ShopOrderInfoWebService extends BaseWebService {
      * @return: AjaxResponse
      */
 //  @LoginVerify
-  @RequestMapping(value = "payNow", method = RequestMethod.POST, consumes = "application/json")
-  public AjaxResponse payNow(@RequestBody String params) {
-      Map<String, Object> data = new HashMap<String, Object>();
-      AjaxResponse ar = new AjaxResponse();
-      /*PageData pd = new PageData();
-      pd = this.getPageData();*/
-      PageData pd = JSON.parseObject(params,PageData.class);
-      try {
-          /*String userstr = SessionUtil.getAttibuteForUser(RequestUtils.getRequestValue(CookieConstant.CSESSIONID, request));
-          JSONObject user = JSONObject.parseObject(userstr);
-          pd.put("user_id", String.valueOf(user.get("id")));
-          pd.put("seeds", user.getString("seeds"));
-          pd.put("user_type", String.valueOf(user.getString("user_type")));
-          pd.put("operator", String.valueOf(user.getString("account")));
-          if(StringUtil.isEmpty(pd.getString("order_id"))){
-              ar.setSuccess(false);
-              ar.setMessage("订单ID不能为空");
-              ar.setErrorCode(CodeConstant.PARAM_ERROR);
-              return ar;
-          }
-          if (StringUtil.isEmpty(pd.getString("order_no"))) {
-              ar.setSuccess(false);
-              ar.setMessage("订单号不能为空");
-              ar.setErrorCode(CodeConstant.PARAM_ERROR);
-              return ar;
-          }
-          if(StringUtil.isEmpty(pd.getString("order_amount"))){
-              ar.setSuccess(false);
-              ar.setMessage("付款金额不能为空");
-              ar.setErrorCode(CodeConstant.PARAM_ERROR);
-              return ar;
-          }
-//          PageData shopOrderInfo = shopOrderInfoService.selectById(Integer.valueOf(pd.getString("order_id")), Constant.VERSION_NO);
-          PageData shopOrderInfo = shopOrderInfoService.getShopOrderByOrderNo(pd, Constant.VERSION_NO);
-          if ("2".equals(shopOrderInfo.getString("order_status"))) {//已支付
-              ar.setSuccess(false);
-              ar.setMessage("已支付");
-              ar.setErrorCode(CodeConstant.pay_finish);
-              return ar;
-          }
-          if (StringUtil.isNotEmpty(shopOrderInfo.getString("trade_hash"))||"1".equals(shopOrderInfo.getString("is_lock"))) {//已支付
-              ar.setSuccess(false);
-              ar.setMessage("交易正在处理，请勿重复支付！");
-              ar.setErrorCode(CodeConstant.pay_finish);
-              return ar;
-          }
-          
-          if ("1".equals(String.valueOf(shopOrderInfo.get("is_promote"))) && "4".equals(shopOrderInfo.getString("order_status"))) {//订单自动取消
-              ar.setSuccess(false);
-              ar.setMessage("未在规定时间内支付，订单自动取消！");
-              ar.setErrorCode(CodeConstant.ERROR_CALCEL);
-              return ar;
-          } else if ("4".equals(shopOrderInfo.getString("order_status"))) {//订单自动取消
-              ar.setSuccess(false);
-              ar.setMessage("订单已取消！");
-              ar.setErrorCode(CodeConstant.ERROR_CALCEL);
-              return ar;
-          }
+    @RequestMapping(value = "payNow", method = RequestMethod.POST, consumes = "application/json")
+    public AjaxResponse payNow(@RequestBody String params) {
+        Map<String, Object> data = new HashMap<String, Object>();
+        AjaxResponse ar = new AjaxResponse();
+        /*PageData pd = new PageData();
+        pd = this.getPageData();*/
+        PageData pd = JSON.parseObject(params,PageData.class);
+        try {
+            /*String userstr = SessionUtil.getAttibuteForUser(RequestUtils.getRequestValue(CookieConstant.CSESSIONID, request));
+            JSONObject user = JSONObject.parseObject(userstr);
+            pd.put("user_id", String.valueOf(user.get("id")));
+            pd.put("seeds", user.getString("seeds"));
+            pd.put("user_type", String.valueOf(user.getString("user_type")));
+            pd.put("operator", String.valueOf(user.getString("account")));
+            if(StringUtil.isEmpty(pd.getString("order_id"))){
+                ar.setSuccess(false);
+                ar.setMessage("订单ID不能为空");
+                ar.setErrorCode(CodeConstant.PARAM_ERROR);
+                return ar;
+            }
+            if (StringUtil.isEmpty(pd.getString("order_no"))) {
+                ar.setSuccess(false);
+                ar.setMessage("订单号不能为空");
+                ar.setErrorCode(CodeConstant.PARAM_ERROR);
+                return ar;
+            }
+            if(StringUtil.isEmpty(pd.getString("order_amount"))){
+                ar.setSuccess(false);
+                ar.setMessage("付款金额不能为空");
+                ar.setErrorCode(CodeConstant.PARAM_ERROR);
+                return ar;
+            }
+//            PageData shopOrderInfo = shopOrderInfoService.selectById(Integer.valueOf(pd.getString("order_id")), Constant.VERSION_NO);
+            PageData shopOrderInfo = shopOrderInfoService.getShopOrderByOrderNo(pd, Constant.VERSION_NO);
+            if ("2".equals(shopOrderInfo.getString("order_status"))) {//已支付
+                ar.setSuccess(false);
+                ar.setMessage("已支付");
+                ar.setErrorCode(CodeConstant.pay_finish);
+                return ar;
+            }
+            if (StringUtil.isNotEmpty(shopOrderInfo.getString("trade_hash"))||"1".equals(shopOrderInfo.getString("is_lock"))) {//已支付
+                ar.setSuccess(false);
+                ar.setMessage("交易正在处理，请勿重复支付！");
+                ar.setErrorCode(CodeConstant.pay_finish);
+                return ar;
+            }
+            
+            if ("1".equals(String.valueOf(shopOrderInfo.get("is_promote"))) && "4".equals(shopOrderInfo.getString("order_status"))) {//订单自动取消
+                ar.setSuccess(false);
+                ar.setMessage("未在规定时间内支付，订单自动取消！");
+                ar.setErrorCode(CodeConstant.ERROR_CALCEL);
+                return ar;
+            } else if ("4".equals(shopOrderInfo.getString("order_status"))) {//订单自动取消
+                ar.setSuccess(false);
+                ar.setMessage("订单已取消！");
+                ar.setErrorCode(CodeConstant.ERROR_CALCEL);
+                return ar;
+            }
 
-          PageData userWallet = userWalletService.getWalletByUserId(String.valueOf(user.get("id")), Constant.VERSION_NO);
-          String future_currency = String.valueOf(userWallet.get("future_currency"));
-          if (new BigDecimal(String.valueOf(shopOrderInfo.get("order_amount"))).compareTo(new BigDecimal(future_currency)) > 0) {
-              ar.setSuccess(false);
-              ar.setMessage("积分余额不足，请充值");
-              ar.setErrorCode(CodeConstant.BALANCE_NOT_ENOUGH);
-              return ar;
-          }
-          pd.put("order_no", shopOrderInfo.getString("order_no"));
-          pd.put("order_id", String.valueOf(shopOrderInfo.get("order_id")));
-          pd.put("order_amount", shopOrderInfo.get("order_amount"));
-          pd.put("mobile_phone", user.getString("mobile_phone"));
+            PageData userWallet = userWalletService.getWalletByUserId(String.valueOf(user.get("id")), Constant.VERSION_NO);
+            String future_currency = String.valueOf(userWallet.get("future_currency"));
+            if (new BigDecimal(String.valueOf(shopOrderInfo.get("order_amount"))).compareTo(new BigDecimal(future_currency)) > 0) {
+                ar.setSuccess(false);
+                ar.setMessage("积分余额不足，请充值");
+                ar.setErrorCode(CodeConstant.BALANCE_NOT_ENOUGH);
+                return ar;
+            }
+            pd.put("order_no", shopOrderInfo.getString("order_no"));
+            pd.put("order_id", String.valueOf(shopOrderInfo.get("order_id")));
+            pd.put("order_amount", shopOrderInfo.get("order_amount"));
+            pd.put("mobile_phone", user.getString("mobile_phone"));
 
-          pd.put("shop_order_no", shopOrderInfo.getString("order_no"));
+            pd.put("shop_order_no", shopOrderInfo.getString("order_no"));
 
-          //锁定订单
-          boolean lockOrderByOrderNo = shopOrderInfoService.lockOrderByOrderNo(pd);
-          logger.info("支付订单锁定结果lockOrderByOrderNo："+lockOrderByOrderNo);*/
-          
-          boolean payNow = shopOrderInfoService.payNow(pd, Constant.VERSION_NO);
-          if (payNow) {
-              ar.setSuccess(true);
-              ar.setMessage("数据同步成功");
-              return ar;
-          }
-          ar.setSuccess(false);
-          ar.setMessage("数据同步失败");
-          ar.setErrorCode(CodeConstant.UPDATE_FAIL);
-      } catch (Exception e) {
-          e.printStackTrace();
-          ar.setSuccess(false);
-          ar.setMessage("网络繁忙，请稍候重试！");
-          ar.setErrorCode(CodeConstant.SYS_ERROR);
-      }
-      return ar;
-  }
+            //锁定订单
+            boolean lockOrderByOrderNo = shopOrderInfoService.lockOrderByOrderNo(pd);
+            logger.info("支付订单锁定结果lockOrderByOrderNo："+lockOrderByOrderNo);*/
+            
+            boolean payNow = shopOrderInfoService.payNow(pd, Constant.VERSION_NO);
+            if (payNow) {
+                ar.setSuccess(true);
+                ar.setMessage("数据同步成功");
+                return ar;
+            }
+            ar.setSuccess(false);
+            ar.setMessage("数据同步失败");
+            ar.setErrorCode(CodeConstant.UPDATE_FAIL);
+        } catch (Exception e) {
+            e.printStackTrace();
+            ar.setSuccess(false);
+            ar.setMessage("网络繁忙，请稍候重试！");
+            ar.setErrorCode(CodeConstant.SYS_ERROR);
+        }
+        return ar;
+    }
 
     /**
      * @param request

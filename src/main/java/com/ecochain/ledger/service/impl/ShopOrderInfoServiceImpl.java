@@ -12,6 +12,7 @@ import com.ecochain.ledger.util.DateUtil;
 import com.ecochain.ledger.util.HttpUtil;
 import com.ecochain.ledger.util.StringUtil;
 import com.github.pagehelper.PageHelper;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -532,108 +534,21 @@ public class ShopOrderInfoServiceImpl implements ShopOrderInfoService {
     @Transactional(propagation = Propagation.REQUIRED)
     public boolean payNow(PageData pd, String versionNo) throws Exception {
         
-        logger.info("-------------商城支付-----------start------------");
-        pd.put("bussTyte", "payNow");//添加业务类型
-        //从账户余额扣钱到冻结余额中
-        if(userWalletService.payNowBySJT(pd, Constant.VERSION_NO)){
-            /*//修改订单状态为已支付
-            PageData shopOrder = new PageData();
-            shopOrder.put("user_id", pd.get("user_id"));
-            shopOrder.put("order_id", pd.getString("order_id"));
-            shopOrder.put("order_status", "2");
-            shopOrder.put("pay_time", DateUtil.getCurrDateTime());
-            if(!updateShopOrderStatus(shopOrder, versionNo)){
-                logger.error("--------商城支付-------updateShopOrderStatus------更新商城订单状态  失败");
-            }
+        logger.info("-------------卖家订单支付同步-----------start------------");
+        
+        if(updateShopOrderStatus(pd, versionNo)){
             //修改订单商品关联表状态为已支付
-            PageData shopOrderGoods = new PageData();
-            shopOrderGoods.put("user_id", pd.get("user_id"));
-            shopOrderGoods.put("shop_order_id", pd.getString("order_id"));
-            shopOrderGoods.put("state", "2");
-            if(!shopOrderGoodsService.updateOrderGoodsStatus(shopOrderGoods, versionNo)){
-                logger.error("--------商城支付-------shopOrderGoodsService.updateOrderGoodsStatus------更新商城订单商品关联表状态  失败");
-            }*/
-            
-            PageData accDetail = new PageData();
-            accDetail.put("user_id", pd.get("user_id"));
-            accDetail.put("user_type", pd.getString("user_type"));
-            accDetail.put("acc_no", "05");
-            pd.put("acc_no", "05");//进区块链
-            accDetail.put("wlbi_amnt", String.valueOf(pd.get("order_amount")));
-            accDetail.put("future_currency", String.valueOf(pd.get("order_amount")));//区块链保存数据用
-            accDetail.put("user_type", pd.getString("user_type"));
-            /*accDetail.put("caldate", DateUtil.getCurrDateTime());
-            accDetail.put("cntflag", "1");
-            accDetail.put("status", "4");*/
-            accDetail.put("status", "5");//5-审核中，6-成功，7失败
-            pd.put("status", "5");//进区块链
-            accDetail.put("otherno", pd.getString("order_no"));
-            accDetail.put("other_amnt", String.valueOf(pd.get("order_amount")));
-            accDetail.put("other_source", "商城兑换");
-            pd.put("other_source", "商城兑换");//进区块链
-            accDetail.put("operator", pd.getString("operator"));
-            String good_name = shopOrderGoodsService.getOneGoodsNameByOrderNo(pd.getString("shop_order_no"));
-            accDetail.put("remark1", good_name);
-            pd.put("remark1", good_name);//进区块链
-            accDetail.put("create_time", DateUtil.getCurrDateTime());
-            pd.put("create_time", DateUtil.getCurrDateTime());//进区块链
-            pd.put("order_status", "2");//进区块链
-            
-            
-            /*logger.info("====================生产掉动态库代码========start================");
-            String seedsStr = pd.getString("seeds");
-            logger.info("seeds="+seedsStr);
-            String hash = qklLibService.sendDataToSys(seedsStr, accDetail);
-            accDetail.put("hash", hash); 
-            pd.put("trade_hash", hash); 
-            logger.info("====================生产掉动态库代码=======end=================");*/
-            
-            logger.info("====================测试代码========start================");
-            String jsonStr = HttpUtil.sendPostData("http://192.168.200.81:8332/get_new_key", "");
-            JSONObject keyJsonObj = JSONObject.parseObject(jsonStr);
-            PageData keyPd = new PageData();
-            keyPd.put("data",Base64.getBase64((JSON.toJSONString(pd))));
-            keyPd.put("publicKey",keyJsonObj.getJSONObject("result").getString("publicKey"));
-            keyPd.put("privateKey",keyJsonObj.getJSONObject("result").getString("privateKey"));
-            System.out.println("keyPd value is ------------->"+JSON.toJSONString(keyPd));
-            //2. 获取公钥签名
-            String signJsonObjStr =HttpUtil.sendPostData("http://192.168.200.81:8332/send_data_for_sign",JSON.toJSONString(keyPd));
-            JSONObject signJsonObj = JSONObject.parseObject(signJsonObjStr);
-            Map<String, Object> paramentMap =new HashMap<String, Object>();
-            paramentMap.put("publickey",keyJsonObj.getJSONObject("result").getString("publicKey"));
-            paramentMap.put("data",Base64.getBase64((JSON.toJSONString(pd))));
-            paramentMap.put("sign",signJsonObj.getString("result"));
-            String result = HttpUtil.sendPostData("http://192.168.200.81:8332/send_data_to_sys", JSON.toJSONString(paramentMap));
-            JSONObject json = JSON.parseObject(result);
-            if(StringUtil.isNotEmpty(json.getString("result"))){
-                accDetail.put("hash", json.getString("result")); 
-                pd.put("trade_hash", json.getString("result")); 
+            if(!shopOrderGoodsService.updateOrderGoodsStatus(pd, versionNo)){
+                logger.error("--------卖家订单支付同步-------shopOrderGoodsService.updateOrderGoodsStatus------更新商城订单商品关联表状态  失败");
             }
-            logger.info("====================测试代码=======end=================");
-            
-            
-            
-            
-            boolean accDetailResult = accDetailService.insertSelective(accDetail, Constant.VERSION_NO);
-            logger.info("--------商城兑换插入账户流水---------accDetailResult结果："+accDetailResult);
-            
-            PageData tshopOrder = new PageData();
-            tshopOrder.put("order_no", pd.getString("order_no"));
-            tshopOrder.put("trade_hash", pd.getString("trade_hash"));
-            tshopOrder.put("order_status", "10");//支付处理中
-            boolean updateOrderHashResult = updateOrderHashByOrderNo(tshopOrder);
-            logger.info("--------商城兑换订单更新hash值---------updateOrderHashResult结果："+updateOrderHashResult);
-            //解锁订单
-            boolean unLockOrderByOrderNo = unLockOrderByOrderNo(pd);
-            logger.info("支付订单解锁结果unLockOrderByOrderNo："+unLockOrderByOrderNo);
-            
-            logger.info("-------------商城支付-----------end------------");
-            return true;
-        }else{
-            logger.error("--------商城支付-------userWalletService.payNowBySJT------从账户余额扣钱到冻结余额中  失败");
         }
         
-        return false;
+        /*boolean accDetailResult = accDetailService.insertSelective(pd, Constant.VERSION_NO);
+        logger.info("--------商城兑换插入账户流水---------accDetailResult结果："+accDetailResult);*/
+        
+        logger.info("-------------卖家订单支付同步-----------end------------");
+        return true;
+        
     }
     
     @Override

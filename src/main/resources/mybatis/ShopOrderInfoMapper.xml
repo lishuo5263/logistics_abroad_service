@@ -576,7 +576,7 @@
     </set>
     where 1=1
     and user_id = #{user_id}
-    and order_id = #{order_id}
+    and order_no = #{order_no}
   </update>
 
   <update id="updateShopOrderStatusInfo" parameterType="com.ecochain.ledger.model.PageData">
