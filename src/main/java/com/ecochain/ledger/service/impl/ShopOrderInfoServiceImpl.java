@@ -879,4 +879,9 @@ public class ShopOrderInfoServiceImpl implements ShopOrderInfoService {
     public String queryOrderNum(String orderNum) {
         return this.shopOrderInfoMapper.queryOrderNum(orderNum);
     }
+
+    @Override
+    public boolean updateHashByOrderNo(Map updateMap) {
+        return this.shopOrderInfoMapper.updateHashByOrderNo(updateMap);
+    }
 }

@@ -442,4 +442,6 @@ public interface ShopOrderInfoService {
      * @return: String
      */
     String queryOrderNum(String orderNum);
+
+    boolean updateHashByOrderNo(Map updateMap);
 }
