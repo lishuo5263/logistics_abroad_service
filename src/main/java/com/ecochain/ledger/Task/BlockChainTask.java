@@ -88,7 +88,7 @@ public class BlockChainTask {
                         shopOrderInfoService.updateHashByOrderNo(updateMap);
                         this.blockDataHashService.insert(blockDataHash);
                     }else if("deliverGoods".equals(data.getString("bussType"))){
-                        HttpTool.doGet("http://localhost:"+servicePort+"/"+serviceName+"/deliverGoods?shop_order_no="+data.getString("shop_order_no") +"&goods_id="+data.getString("goods_id") +"&logistics_no="+data.getString("logistics_no") +"&logistics_name="+data.getString("logistics_name") +"");
+                        HttpTool.doGet("http://localhost:"+servicePort+"/"+serviceName+"/api/rest/shopOrder/deliverGoods?shop_order_no="+data.getString("shop_order_no") +"&goods_id="+data.getString("goods_id") +"&logistics_no="+data.getString("logistics_no") +"&logistics_hash="+resultInfo.getString("hash") +"&logistics_name="+data.getString("logistics_name") +"");
                         this.blockDataHashService.insert(blockDataHash);
                     }else if("payNow".equals(data.getString("bussType"))){
                         data.put("hash", hash);
@@ -115,7 +115,7 @@ public class BlockChainTask {
         PageData pd  = new PageData();
         pd.put("user_id", "123456");
         try {
-            HttpTool.doPost("http://localhost:3333/logistics-service/api/rest/shopOrder/payNow", JSON.toJSONString(pd));
+          //  HttpTool.doGet("http://localhost:4444/logistics-abroad-service/api/rest/shopOrder/deliverGoods?shop_order_no=170525111019236302999&goods_id=1120&logistics_no=1111&logistics_name=1111\n");
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -497,32 +497,35 @@ public class ShopOrderInfoServiceImpl implements ShopOrderInfoService {
                 kql_url = mapObj.get("code_value").toString();
             }
         }
-        logger.info("====================测试代码========start================");
-        String jsonStr = HttpUtil.sendPostData(""+ kql_url+"/get_new_key", "");
-        JSONObject keyJsonObj = JSONObject.parseObject(jsonStr);
-        PageData keyPd = new PageData();
-        keyPd.put("data",Base64.getBase64((pd.toString())));
-        keyPd.put("publicKey",keyJsonObj.getJSONObject("result").getString("publicKey"));
-        keyPd.put("privateKey",keyJsonObj.getJSONObject("result").getString("privateKey"));
-        System.out.println("keyPd value is ------------->"+JSON.toJSONString(keyPd));
-        //2. 获取公钥签名
-        String signJsonObjStr =HttpUtil.sendPostData(""+ kql_url+"/send_data_for_sign", JSON.toJSONString(keyPd));
-        JSONObject signJsonObj = JSONObject.parseObject(signJsonObjStr);
-        Map<String, Object> paramentMap =new HashMap<String, Object>();
-        paramentMap.put("publickey",keyJsonObj.getJSONObject("result").getString("publicKey"));
-        paramentMap.put("data",Base64.getBase64((pd.toString())));
-        paramentMap.put("sign",signJsonObj.getString("result"));
-        String result1 = HttpUtil.sendPostData(""+ kql_url+"/send_data_to_sys", JSON.toJSONString(paramentMap));
-        JSONObject json = JSON.parseObject(result1);
-        if(StringUtil.isNotEmpty(json.getString("result"))){
-            pd.put("logistics_hash",json.getString("result"));
+        JSONObject json =null;
+        if(StringUtil.isEmpty(pd.getString("logistics_hash"))){
+            logger.info("====================测试代码========start================");
+            String jsonStr = HttpUtil.sendPostData(""+ kql_url+"/get_new_key", "");
+            JSONObject keyJsonObj = JSONObject.parseObject(jsonStr);
+            PageData keyPd = new PageData();
+            keyPd.put("data",Base64.getBase64((JSON.toJSONString(pd))));
+            keyPd.put("publicKey",keyJsonObj.getJSONObject("result").getString("publicKey"));
+            keyPd.put("privateKey",keyJsonObj.getJSONObject("result").getString("privateKey"));
+            System.out.println("keyPd value is ------------->"+JSON.toJSONString(keyPd));
+            //2. 获取公钥签名
+            String signJsonObjStr =HttpUtil.sendPostData(""+ kql_url+"/send_data_for_sign", JSON.toJSONString(keyPd));
+            JSONObject signJsonObj = JSONObject.parseObject(signJsonObjStr);
+            Map<String, Object> paramentMap =new HashMap<String, Object>();
+            paramentMap.put("publickey",keyJsonObj.getJSONObject("result").getString("publicKey"));
+            paramentMap.put("data",Base64.getBase64((JSON.toJSONString(pd))));
+            paramentMap.put("sign",signJsonObj.getString("result"));
+            String result1 = HttpUtil.sendPostData(""+ kql_url+"/send_data_to_sys", JSON.toJSONString(paramentMap));
+            json = JSON.parseObject(result1);
+            if(StringUtil.isNotEmpty(json.getString("result"))){
+                pd.put("logistics_hash",json.getString("result"));
+            }
+            logger.info("====================测试代码=======end=================");
+            BlockDataHash blockDataHash =new BlockDataHash();
+            blockDataHash.setBussType("deliverGoods");
+            blockDataHash.setDataHash(StringUtil.isEmpty(json.getString("result"))== true ? pd.getString("logistics_hash") :json.getString("result"));
+            blockDataHash.setBlockCreateTime(new Date());
+            this.blockDataHashMapper.insert(blockDataHash);
         }
-        logger.info("====================测试代码=======end=================");
-        BlockDataHash blockDataHash =new BlockDataHash();
-        blockDataHash.setBussType("deliverGoods");
-        blockDataHash.setDataHash( json.getString("result"));
-        blockDataHash.setBlockCreateTime(new Date());
-        this.blockDataHashMapper.insert(blockDataHash);
         //添加物流信息
         shopOrderLogisticsService.insertSelective(pd, Constant.VERSION_NO);
         //修改订单商品关联表信息（添加物流单号及修改发货状态）
