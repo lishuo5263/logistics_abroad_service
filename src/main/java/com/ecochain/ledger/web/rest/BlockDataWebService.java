@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import tk.mybatis.mapper.util.StringUtil;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ecochain.ledger.base.BaseWebService;
 import com.ecochain.ledger.constants.CodeConstant;
 import com.ecochain.ledger.constants.Constant;
@@ -70,7 +71,8 @@ public class BlockDataWebService extends BaseWebService{
             if(pd.getRows()!=null){
                 rows = String.valueOf(pd.getRows());
             }
-            String blockData = HttpTool.doPost(kql_url+"/GetDataList", rows);
+            String result = HttpTool.doPost(kql_url+"/GetDataList", rows);
+            JSONObject blockData = JSONObject.parseObject(result);
             data.put("list", blockData);
             ar.setData(data);
             ar.setSuccess(true);
@@ -112,7 +114,8 @@ public class BlockDataWebService extends BaseWebService{
             if(pd.getRows()!=null){
                 rows = String.valueOf(pd.getRows());
             }
-            String blockData = HttpTool.doPost(kql_url+"/GetBlockList", rows);
+            String result = HttpTool.doPost(kql_url+"/GetBlockList", rows);
+            JSONObject blockData = JSONObject.parseObject(result);
             data.put("list", blockData);
             ar.setData(data);
             ar.setSuccess(true);
@@ -136,7 +139,7 @@ public class BlockDataWebService extends BaseWebService{
     @PostMapping("/getBlockByDate")
     @ApiOperation(nickname = "按日期查询区块数据", value = "按日期查询区块数据", notes = "按日期查询区块数据")
     @ApiImplicitParams({
-        @ApiImplicitParam(name = "date", value = "查询日期，请求样例：2017-5-25 12:30:10", required = true, paramType = "query", dataType = "String")
+        @ApiImplicitParam(name = "date", value = "查询日期，请求样例：\"2017-05-25 12:30:10\"需带双引号", required = false, paramType = "query", dataType = "String")
     })
     public AjaxResponse getBlockByDate(HttpServletRequest request){
         AjaxResponse ar = new AjaxResponse();
@@ -150,11 +153,12 @@ public class BlockDataWebService extends BaseWebService{
                     kql_url = mapObj.get("code_value").toString();
                 }
             }
-            String date = DateUtil.getCurrDateTime();
+            String date = "\""+DateUtil.getCurrDateTime()+"\"";
             if(pd.getString("date")!=null){
                 date = pd.getString("date");
             }
-            String blockData = HttpTool.doPost(kql_url+"/getBlockByDate", date);
+            String result = HttpTool.doPost(kql_url+"/GetBlockByDate", date);
+            JSONObject blockData = JSONObject.parseObject(result);
             data.put("list", blockData);
             ar.setData(data);
             ar.setSuccess(true);
@@ -199,8 +203,9 @@ public class BlockDataWebService extends BaseWebService{
                     kql_url = mapObj.get("code_value").toString();
                 }
             }
-            String result = HttpTool.doPost(kql_url+"/getBlockByDate", pd.getString("hash"));
-            data.put("result", result);
+            String result = HttpTool.doPost(kql_url+"/get_data_from_sys", pd.getString("hash"));
+            JSONObject blockData = JSONObject.parseObject(result);
+            data.put("result", blockData);
             ar.setData(data);
             ar.setSuccess(true);
             ar.setMessage("查询成功！");
@@ -243,8 +248,9 @@ public class BlockDataWebService extends BaseWebService{
                     kql_url = mapObj.get("code_value").toString();
                 }
             }
-            String result = HttpTool.doPost(kql_url+"/getBlockHeight", pd.getString("hash"));
-            data.put("result", result);
+            String result = HttpTool.doPost(kql_url+"/GetBlockHeight", pd.getString("hash"));
+            JSONObject blockData = JSONObject.parseObject(result);
+            data.put("result", blockData);
             ar.setData(data);
             ar.setSuccess(true);
             ar.setMessage("查询成功！");
@@ -288,8 +294,9 @@ public class BlockDataWebService extends BaseWebService{
                     kql_url = mapObj.get("code_value").toString();
                 }
             }
-            String result = HttpTool.doPost(kql_url+"/getBlockHashByHe", pd.getString("height"));
-            data.put("result", result);
+            String result = HttpTool.doPost(kql_url+"/GetBlockHashByHe", pd.getString("height"));
+            JSONObject blockData = JSONObject.parseObject(result);
+            data.put("result", blockData);
             ar.setData(data);
             ar.setSuccess(true);
             ar.setMessage("查询成功！");
