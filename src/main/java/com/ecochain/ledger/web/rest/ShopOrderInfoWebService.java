@@ -1,28 +1,5 @@
 package com.ecochain.ledger.web.rest;
 
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.JavaType;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ecochain.ledger.annotation.LoginVerify;
@@ -32,20 +9,24 @@ import com.ecochain.ledger.constants.Constant;
 import com.ecochain.ledger.constants.CookieConstant;
 import com.ecochain.ledger.model.PageData;
 import com.ecochain.ledger.model.ShopOrderGoods;
-import com.ecochain.ledger.service.ShopGoodsService;
-import com.ecochain.ledger.service.ShopOrderGoodsService;
-import com.ecochain.ledger.service.ShopOrderInfoService;
-import com.ecochain.ledger.service.ShopSupplierService;
-import com.ecochain.ledger.service.SysGenCodeService;
-import com.ecochain.ledger.service.UserWalletService;
+import com.ecochain.ledger.service.*;
 import com.ecochain.ledger.util.AjaxResponse;
-import com.ecochain.ledger.util.Base64;
-import com.ecochain.ledger.util.DateUtil;
-import com.ecochain.ledger.util.OrderGenerater;
 import com.ecochain.ledger.util.RequestUtils;
 import com.ecochain.ledger.util.SessionUtil;
 import com.ecochain.ledger.util.StringUtil;
 import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import org.codehaus.jackson.map.DeserializationConfig;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.JavaType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * Created by LiShuo on 2016/10/28.
@@ -1303,6 +1284,7 @@ public class ShopOrderInfoWebService extends BaseWebService {
             @ApiImplicitParam(name = "logistics_no", value = "物流单号", required = true, paramType = "query", dataType = "String"),
             @ApiImplicitParam(name = "logistics_name", value = "物流名称", required = true, paramType = "query", dataType = "String"),
             @ApiImplicitParam(name = "CSESSIONID", value = "CSESSIONID", required = false, paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = "logistics_hash", value = "logistics_hash", required = false, paramType = "query", dataType = "String"),
     })
     public AjaxResponse deliverGoods(HttpServletRequest request) {
         AjaxResponse ar = new AjaxResponse();
