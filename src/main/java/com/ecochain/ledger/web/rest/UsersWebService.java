@@ -516,9 +516,10 @@ public class UsersWebService extends BaseWebService {
             //商城订单列表
             
             PageData oneSupplier = null;
+            PageData orderPD = new PageData();
+            List<PageData> shopOrderList = null;
             if ("4".equals(user.getString("user_type"))) {//供应商
                 //根据user_id查询供应商信息
-//                supplierList = shopOrderInfoService.getSupplierByUserId(String.valueOf(user.get("id")), Constant.VERSION_NO);
                 oneSupplier = shopOrderInfoService.getOneSupplierByUserId(String.valueOf(user.get("id")), Constant.VERSION_NO);
                 if (oneSupplier == null) {
                     logger.error("--------查询商城订单列表-----------根据user_id查找不到供应商信息！");
@@ -527,27 +528,16 @@ public class UsersWebService extends BaseWebService {
                     ar.setErrorCode(CodeConstant.NO_EXISTS);
                     return ar;
                 }
-                /*for(PageData supplier:supplierList){
-                    supplierIdList.add((Integer)supplier.get("id"));
-                }
-                pd.put("supplierList", supplierList);*/
                 pd.put("supplier_id", String.valueOf(oneSupplier.get("id")));
-            } else {
-                pd.put("user_id", String.valueOf(user.get("id")));
-                pd.put("user_type", String.valueOf(user.getString("user_type")));
-            }
-            
-            PageData orderPD = new PageData();
-            List<PageData> shopOrderList = null;
-            if("6".equals(user.getString("user_type"))||"7".equals(user.getString("user_type"))){//6-国内物流 7-境外物流
+            }else if("6".equals(user.getString("user_type"))||"7".equals(user.getString("user_type"))){//6-国内物流 7-境外物流
                 //分页查询商城订单列表
                 orderPD.put("user_type", user.getString("user_type"));
-            }else if("4".equals(user.getString("user_type"))){//卖家
-                //分页查询商城订单列表
-                orderPD.put("supplier_id", String.valueOf(user.get("id")));
             }else if("1".equals(user.getString("user_type"))){//买家
                 orderPD.put("user_id", String.valueOf(user.get("id")));
             }
+            
+            
+            
             shopOrderList =  shopOrderInfoService.listShopOrderByPage(orderPD);//查询所有订单
             if (shopOrderList != null && shopOrderList.size()>0) {
                 List<String> orderIdList = new ArrayList<String>();
@@ -555,12 +545,6 @@ public class UsersWebService extends BaseWebService {
                     orderIdList.add(String.valueOf(shopOrder.get("order_id")));
                 }
                 PageData shopOrder = new PageData();
-                if ("4".equals(user.getString("user_type"))) {//供应商
-//                    shopOrder.put("supplierIdList", supplierIdList);
-                    shopOrder.put("supplier_id", String.valueOf(oneSupplier.get("id")));
-                } else {
-                    shopOrder.put("user_id", String.valueOf(user.get("id")));
-                }
                 shopOrder.put("orderIdList", orderIdList);
                 List<PageData> shopGoods = shopOrderInfoService.getGoodsByOrderId(shopOrder, Constant.VERSION_NO);
 

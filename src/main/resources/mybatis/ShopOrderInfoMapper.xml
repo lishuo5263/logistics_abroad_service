@@ -367,11 +367,11 @@
     </if>
     <if test="supplier_id != null" >
       and   b.supplier_id = #{supplier_id}
-      and   a.order_status not in('1','4','9')
+<!--       and   a.order_status not in('1','4','9') -->
     </if>
     <if test="user_id != null" >
       and   a.user_id = #{user_id}
-      and   a.order_status not in('4','9')
+<!--       and   a.order_status not in('4','9') -->
     </if>
     <if test="user_type != null and user_type == 6 " >
       and   a.shipping_name = '国内物流'
@@ -400,13 +400,13 @@
     <foreach collection="orderIdList" index="index" item="item" open="(" separator="," close=")">  
             #{item}   
     </foreach>  
-    <if test="user_id != null" >
+    <!-- <if test="user_id != null" >
       and   a.user_id = #{user_id}
       and   a.state not in('5','9')
-    </if>
+    </if> -->
     <if test="supplier_id != null" >
       and   a.supplier_id = #{supplier_id}
-      and   a.state not in('1','5','9')
+<!--       and   a.state not in('1','5','9') -->
     </if>
     GROUP BY a.rec_id
   </select>
