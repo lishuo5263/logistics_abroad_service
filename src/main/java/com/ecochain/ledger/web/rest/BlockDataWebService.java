@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import tk.mybatis.mapper.util.StringUtil;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ecochain.ledger.base.BaseWebService;
 import com.ecochain.ledger.constants.CodeConstant;
@@ -25,6 +26,7 @@ import com.ecochain.ledger.constants.Constant;
 import com.ecochain.ledger.model.PageData;
 import com.ecochain.ledger.service.SysGenCodeService;
 import com.ecochain.ledger.util.AjaxResponse;
+import com.ecochain.ledger.util.Base64;
 import com.ecochain.ledger.util.DateUtil;
 import com.ecochain.ledger.util.HttpTool;
 import com.ecochain.ledger.util.Logger;
@@ -73,6 +75,12 @@ public class BlockDataWebService extends BaseWebService{
             }
             String result = HttpTool.doPost(kql_url+"/GetDataList", rows);
             JSONObject blockData = JSONObject.parseObject(result);
+            JSONArray blockArray = blockData.getJSONArray("result");
+            for(Object trade:blockArray){
+                JSONObject tradeJSON = (JSONObject)trade;
+                String dataStr = Base64.getFromBase64(tradeJSON.getString("data"));
+                tradeJSON.put("data", JSONObject.parseObject(dataStr));
+            }
             data.put("list", blockData);
             ar.setData(data);
             ar.setSuccess(true);
@@ -205,6 +213,8 @@ public class BlockDataWebService extends BaseWebService{
             }
             String result = HttpTool.doPost(kql_url+"/get_data_from_sys", pd.getString("hash"));
             JSONObject blockData = JSONObject.parseObject(result);
+            String dataStr = Base64.getFromBase64(blockData.getJSONObject("result").getString("data"));
+            blockData.getJSONObject("result").put("data", JSONObject.parseObject(dataStr));
             data.put("result", blockData);
             ar.setData(data);
             ar.setSuccess(true);
