@@ -124,6 +124,11 @@ public class BlockDataWebService extends BaseWebService{
             }
             String result = HttpTool.doPost(kql_url+"/GetBlockList", rows);
             JSONObject blockData = JSONObject.parseObject(result);
+            JSONArray blockArray  = blockData.getJSONArray("result");
+            for(Object block :blockArray ){
+                JSONObject blockJson = (JSONObject)block;
+                blockJson.put("generateTime",DateUtil.stampToDate(blockJson.getString("generateTime")));
+            }
             data.put("list", blockData);
             ar.setData(data);
             ar.setSuccess(true);
