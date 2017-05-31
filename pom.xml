@@ -332,13 +332,10 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<fork>true</fork>
-				</configuration>
+                    <mainClass>com.ecochain.ledger.Application</mainClass>
+                    <fork>true</fork>
+                </configuration>
 			</plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
