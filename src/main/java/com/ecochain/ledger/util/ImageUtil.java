@@ -1,6 +1,7 @@
 /*
  *    Copyright 2012-2013 The Haohui Network Corporation
- */
+ *//*
+
 package com.ecochain.ledger.util;
 
 import java.awt.Color;
@@ -25,6 +26,7 @@ import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGEncodeParam;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
   
+*/
 /**
  * 图片压缩工具类 提供的方法中可以设定生成的 缩略图片的大小尺寸、压缩尺寸的比例、图片的质量等
  * <pre>
@@ -35,15 +37,18 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  * @project haohui-b2b
  * @author cevencheng
  * @create 2012-3-22 下午8:29:01
- */
+ *//*
+
 public class ImageUtil{  
   
-    /** 
+    */
+/**
      * * 图片文件读取 
      *  
      * @param srcImgPath 
      * @return 
-     */  
+     *//*
+
     private static BufferedImage InputImage(String srcImgPath) throws RuntimeException {  
   
         BufferedImage srcImage = null;
@@ -70,7 +75,8 @@ public class ImageUtil{
         return srcImage;  
     }  
   
-    /** 
+    */
+/**
      * * 将图片按照指定的图片尺寸、源图片质量压缩(默认质量为1) 
      *  
      * @param srcImgPath 
@@ -81,13 +87,15 @@ public class ImageUtil{
      *            :压缩后的图片宽 
      * @param new_h 
      *            :压缩后的图片高 
-     */  
+     *//*
+
     public static void resize(String srcImgPath, String outImgPath,  
             int new_w, int new_h) {  
         resize(srcImgPath, outImgPath, new_w, new_h, 1F);  
     }  
   
-    /** 
+    */
+/**
      * 将图片按照指定的尺寸比例、源图片质量压缩(默认质量为1) 
      *  
      * @param srcImgPath 
@@ -98,13 +106,15 @@ public class ImageUtil{
      *            :压缩后的图片尺寸比例 
      * @param per 
      *            :百分比 
-     */  
+     *//*
+
     public static void resize(String srcImgPath, String outImgPath,  
             float ratio) {  
         resize(srcImgPath, outImgPath, ratio, 1F);  
     }  
   
-    /** 
+    */
+/**
      * 将图片按照指定长或者宽的最大值来压缩图片(默认质量为1) 
      *  
      * @param srcImgPath 
@@ -115,13 +125,15 @@ public class ImageUtil{
      *            :长或者宽的最大值 
      * @param per 
      *            :图片质量 
-     */  
+     *//*
+
     public static void resize(String srcImgPath, String outImgPath,  
             int maxLength) {  
         resize(srcImgPath, outImgPath, maxLength, 1F);  
     }  
   
-    /** 
+    */
+/**
      * * 将图片按照指定的图片尺寸、图片质量压缩 
      *  
      * @param srcImgPath 
@@ -135,7 +147,8 @@ public class ImageUtil{
      * @param per 
      *            :百分比 
      * @author cevencheng
-     */  
+     *//*
+
     public static void resize(String srcImgPath, String outImgPath,  
             int new_w, int new_h, float per) {  
         // 得到图片  
@@ -162,7 +175,8 @@ public class ImageUtil{
         outImage(outImgPath, newImg, per);  
     }  
   
-    /** 
+    */
+/**
      * * 将图片按照指定的尺寸比例、图片质量压缩 
      *  
      * @param srcImgPath 
@@ -174,7 +188,8 @@ public class ImageUtil{
      * @param per 
      *            :百分比 
      * @author cevencheng
-     */  
+     *//*
+
     public static void resize(String srcImgPath, String outImgPath,  
             float ratio, float per) {  
         // 得到图片  
@@ -204,7 +219,8 @@ public class ImageUtil{
         // 调用方法输出图片文件OutImage(outImgPath, newImg, per);  
     }  
   
-    /** 
+    */
+/**
      * <b>
      * 指定长或者宽的最大值来压缩图片
      * 	推荐使用此方法 
@@ -218,7 +234,8 @@ public class ImageUtil{
      * @param per 
      *            :图片质量 
      * @author cevencheng
-     */  
+     *//*
+
     public static void resize(String srcImgPath, String outImgPath,  
             int maxLength, float per) {  
         // 得到图片  
@@ -257,14 +274,16 @@ public class ImageUtil{
         outImage(outImgPath, newImg, per);  
     }  
     
-    /**
+    */
+/**
      * 将图片压缩成指定宽度， 高度等比例缩放
      * 
      * @param srcImgPath
      * @param outImgPath
      * @param width
      * @param per
-     */
+     *//*
+
     public static void resizeFixedWidth(String srcImgPath, String outImgPath,  
     		int width, float per) {  
     	// 得到图片  
@@ -303,14 +322,16 @@ public class ImageUtil{
     	outImage(outImgPath, newImg, per);  
     }  
   
-    /** 
+    */
+/**
      * * 将图片文件输出到指定的路径，并可设定压缩质量 
      *  
      * @param outImgPath 
      * @param newImg 
      * @param per 
      * @author cevencheng
-     */  
+     *//*
+
     private static void outImage(String outImgPath, BufferedImage newImg, float per) {  
         // 判断输出的文件夹路径是否存在，不存在则创建  
         File file = new File(outImgPath);  
@@ -340,7 +361,8 @@ public class ImageUtil{
         }
     }  
   
-    /**
+    */
+/**
      * 图片剪切工具方法
      * 
      * @param srcfile 源图片
@@ -352,7 +374,8 @@ public class ImageUtil{
      * 
      * @throws IOException
      * @author cevencheng
-     */
+     *//*
+
 	public static void cut(File srcfile, File outfile, int x, int y, int width, int height) throws IOException {
 		FileInputStream is = null;
 		ImageInputStream iis = null;
@@ -360,41 +383,51 @@ public class ImageUtil{
 			// 读取图片文件
 			is = new FileInputStream(srcfile);
 
-			/*
+			*/
+/*
 			 * 返回包含所有当前已注册 ImageReader 的 Iterator，这些 ImageReader 声称能够解码指定格式。
 			 * 参数：formatName - 包含非正式格式名称 .（例如 "jpeg" 或 "tiff"）等 。
-			 */
+			 *//*
+
 			Iterator<ImageReader> it = ImageIO.getImageReadersByFormatName("jpg");
 			ImageReader reader = it.next();
 			// 获取图片流
 			iis = ImageIO.createImageInputStream(is);
 
-			/*
+			*/
+/*
 			 * <p>iis:读取源.true:只向前搜索 </p>.将它标记为 ‘只向前搜索’。
 			 * 此设置意味着包含在输入源中的图像将只按顺序读取，可能允许 reader 避免缓存包含与以前已经读取的图像关联的数据的那些输入部分。
-			 */
+			 *//*
+
 			reader.setInput(iis, true);
 
-			/*
+			*/
+/*
 			 * <p>描述如何对流进行解码的类<p>.用于指定如何在输入时从 Java Image I/O
 			 * 框架的上下文中的流转换一幅图像或一组图像。用于特定图像格式的插件 将从其 ImageReader 实现的
 			 * getDefaultReadParam 方法中返回 ImageReadParam 的实例。
-			 */
+			 *//*
+
 			ImageReadParam param = reader.getDefaultReadParam();
 
-			/*
+			*/
+/*
 			 * 图片裁剪区域。Rectangle 指定了坐标空间中的一个区域，通过 Rectangle 对象
 			 * 的左上顶点的坐标（x，y）、宽度和高度可以定义这个区域。
-			 */
+			 *//*
+
 			Rectangle rect = new Rectangle(x, y, width, height);
 
 			// 提供一个 BufferedImage，将其用作解码像素数据的目标。
 			param.setSourceRegion(rect);
 
-			/*
+			*/
+/*
 			 * 使用所提供的 ImageReadParam 读取通过索引 imageIndex 指定的对象，并将 它作为一个完整的
 			 * BufferedImage 返回。
-			 */
+			 *//*
+
 			BufferedImage bi = reader.read(0, param);
 
 			// 保存新图片
@@ -430,3 +463,4 @@ public class ImageUtil{
         System.out.println(new Date().getTime() - startTime);  
     }  
 }  
+*/
