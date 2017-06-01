@@ -15,9 +15,11 @@ import com.ecochain.ledger.util.RequestUtils;
 import com.ecochain.ledger.util.SessionUtil;
 import com.ecochain.ledger.util.StringUtil;
 import com.github.pagehelper.PageInfo;
+
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.JavaType;
@@ -25,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -53,6 +56,8 @@ public class ShopOrderInfoWebService extends BaseWebService {
     private StoreOrderInfoService storeOrderInfoService;*/
     @Autowired
     private ShopSupplierService shopSupplierService;
+    @Autowired
+    private ShopOrderLogisticsService shopOrderLogisticsService;
     /*@Autowired
     private StoreInfoService storeInfoService;*/
 
@@ -1496,6 +1501,55 @@ public class ShopOrderInfoWebService extends BaseWebService {
         return ar;
     }
 
+    /**
+     * @describe:查询物流信息
+     * @author: zhangchunming
+     * @date: 2017年6月1日下午3:40:03
+     * @param request
+     * @return: AjaxResponse
+     */
+    @LoginVerify
+    @RequestMapping(value = "/getLogistics", method = RequestMethod.POST)
+    @ApiOperation(nickname = "查询物流信息", value = "查询物流信息", notes = "查询物流信息！")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "shop_order_no", value = "订单号", required = true, paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = "logistics_no", value = "物流号", required = true, paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = "CSESSIONID", value = "CSESSIONID", required = false, paramType = "query", dataType = "String")
+    })
+    public AjaxResponse getLogistics(HttpServletRequest request) {
+        Map<String, Object> data = new HashMap<String, Object>();
+        AjaxResponse ar = new AjaxResponse();
+        PageData pd = new PageData();
+        pd = this.getPageData();
+        try {
+//            String userstr = SessionUtil.getAttibuteForUser(RequestUtils.getRequestValue(CookieConstant.CSESSIONID, request));
+//            JSONObject user = JSONObject.parseObject(userstr);
+            if (StringUtil.isEmpty(pd.getString("shop_order_no"))) {
+                ar.setSuccess(false);
+                ar.setMessage("请输入订单号");
+                ar.setErrorCode(CodeConstant.PARAM_ERROR);
+                return ar;
+            }
+            if (StringUtil.isEmpty(pd.getString("logistics_no"))) {
+                ar.setSuccess(false);
+                ar.setMessage("请输入物流单号");
+                ar.setErrorCode(CodeConstant.PARAM_ERROR);
+                return ar;
+            }
+            List<PageData> logisticsList = shopOrderLogisticsService.getLogistics(pd);
+            data.put("list", logisticsList);
+            ar.setData(data);
+            ar.setSuccess(true);
+            ar.setMessage("查询成功！");
+        } catch (Exception e) {
+            e.printStackTrace();
+            ar.setSuccess(false);
+            ar.setMessage("网络繁忙，请稍候重试！");
+            ar.setErrorCode(CodeConstant.SYS_ERROR);
+        }
+        return ar;
+    }
+    
     /**
      * @param request
      * @describe:商品退货关闭订单
