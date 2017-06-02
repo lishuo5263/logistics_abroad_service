@@ -2,12 +2,14 @@ package com.ecochain.ledger.model;
 
 import java.util.Date;
 
-public class shopOrderLogisticsDetail {
+public class ShopOrderLogisticsDetail {
     private Integer id;
 
     private String logisticsNo;
 
     private String logisticsMsg;
+
+    private String logisticsDetailHash;
 
     private Date createTime;
 
@@ -35,6 +37,14 @@ public class shopOrderLogisticsDetail {
 
     public void setLogisticsMsg(String logisticsMsg) {
         this.logisticsMsg = logisticsMsg == null ? null : logisticsMsg.trim();
+    }
+
+    public String getLogisticsDetailHash() {
+        return logisticsDetailHash;
+    }
+
+    public void setLogisticsDetailHash(String logisticsDetailHash) {
+        this.logisticsDetailHash = logisticsDetailHash == null ? null : logisticsDetailHash.trim();
     }
 
     public Date getCreateTime() {
