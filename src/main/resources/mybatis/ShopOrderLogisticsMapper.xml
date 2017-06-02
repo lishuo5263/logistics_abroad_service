@@ -91,4 +91,12 @@
       logistics_name = #{logistics_name,jdbcType=VARCHAR},
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="getLogistics" parameterType="com.ecochain.ledger.model.PageData" resultType="com.ecochain.ledger.model.PageData">
+        select a.logistics_no,a.logistics_name,b.logistics_msg,a.createtime,b.create_time logistics_msg_time 
+        from shop_order_logistics a LEFT JOIN shop_order_logistics_detail b ON  a.logistics_no = b.logistics_no
+        where 1=1
+        and a.logistics_no = #{logistics_no}
+        and a.shop_order_no = #{shop_order_no}
+        ORDER BY a.createtime DESC ,b.create_time DESC
+  </select>
 </mapper>
