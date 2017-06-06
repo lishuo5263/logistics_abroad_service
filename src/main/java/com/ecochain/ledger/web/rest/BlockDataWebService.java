@@ -323,4 +323,50 @@ public class BlockDataWebService extends BaseWebService{
         }   
         return ar;
     }
+    
+    /**
+     * @describe:根据区块哈希查询区块详细
+     * @author: zhangchunming
+     * @date: 2017年6月5日下午2:03:20
+     * @param request
+     * @return: AjaxResponse
+     */
+    @PostMapping("/getBlockDetail")
+    @ApiOperation(nickname = "根据区块hash查询区块详细", value = "根据区块hash查询区块详细", notes = "根据区块hash查询区块详细")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "hash", value = "区块hash，需带双引号", required = true, paramType = "query", dataType = "String")
+    })
+    public AjaxResponse getBlockDetail(HttpServletRequest request){
+        AjaxResponse ar = new AjaxResponse();
+        Map<String,Object> data = new HashMap<String, Object>();
+        PageData pd = this.getPageData();
+        try {
+            if(StringUtil.isEmpty(pd.getString("hash"))){
+                ar.setErrorCode(CodeConstant.PARAM_ERROR);
+                ar.setMessage("请输入区块hash！");
+                ar.setSuccess(false);
+                return ar;
+            }
+            
+            String kql_url =null;
+            List<PageData> codeList =sysGenCodeService.findByGroupCode("QKL_URL", Constant.VERSION_NO);
+            for(PageData mapObj:codeList){
+                if("QKL_URL".equals(mapObj.get("code_name"))){
+                    kql_url = mapObj.get("code_value").toString();
+                }
+            }
+            String result = HttpTool.doPost(kql_url+"/GetBlockDetail", pd.getString("hash"));
+            JSONObject blockData = JSONObject.parseObject(result);
+            data.put("result", blockData);
+            ar.setData(data);
+            ar.setSuccess(true);
+            ar.setMessage("查询成功！");
+        } catch (Exception e) {
+            e.printStackTrace();
+            ar.setSuccess(false);
+            ar.setErrorCode(CodeConstant.SYS_ERROR);
+            ar.setMessage("网络繁忙，请稍候重试！");
+        }   
+        return ar;
+    }
 }
