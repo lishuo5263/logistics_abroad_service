@@ -374,7 +374,7 @@
 <!--       and   a.order_status not in('4','9') -->
     </if>
     <if test="user_type != null and user_type == 6 " >
-      and   (a.shipping_name is not null or != '')
+      and   (a.shipping_name is not null or a.shipping_name != '')
     </if>
     <if test="user_type != null and user_type == 7 " >
       and   a.order_status = '11'
