@@ -1537,7 +1537,9 @@ public class ShopOrderInfoWebService extends BaseWebService {
                 return ar;
             }
             List<PageData> logisticsList = shopOrderLogisticsService.getLogistics(pd);
+            String orderStatus = shopOrderInfoService.getOrderStatusByOrderNo(pd.getString("shop_order_no"));
             data.put("list", logisticsList);
+            data.put("orderStatus", orderStatus);
             ar.setData(data);
             ar.setSuccess(true);
             ar.setMessage("查询成功！");

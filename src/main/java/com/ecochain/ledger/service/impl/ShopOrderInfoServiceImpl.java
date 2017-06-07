@@ -887,4 +887,9 @@ public class ShopOrderInfoServiceImpl implements ShopOrderInfoService {
     public boolean updateHashByOrderNo(Map updateMap) {
         return this.shopOrderInfoMapper.updateHashByOrderNo(updateMap);
     }
+    
+    @Override
+    public String getOrderStatusByOrderNo(String order_no) throws Exception {
+        return (String)dao.findForObject("com.ecochain.ledger.mapper.ShopOrderInfoMapper.getOrderStatusByOrderNo", order_no);
+    }
 }

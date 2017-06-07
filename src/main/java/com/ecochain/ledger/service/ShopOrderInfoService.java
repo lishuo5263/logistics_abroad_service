@@ -444,4 +444,14 @@ public interface ShopOrderInfoService {
     String queryOrderNum(String orderNum);
 
     boolean updateHashByOrderNo(Map updateMap);
+    
+    /**
+     * @describe:根据订单号查询订单状态
+     * @author: zhangchunming
+     * @date: 2017年6月7日下午3:44:04
+     * @param order_no
+     * @throws Exception
+     * @return: String
+     */
+    String getOrderStatusByOrderNo(String order_no)throws Exception;
 }
