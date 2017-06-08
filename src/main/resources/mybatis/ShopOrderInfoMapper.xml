@@ -622,9 +622,13 @@
   </select>
   <update id="updateStateByOrderNo" parameterType="com.ecochain.ledger.model.PageData">
     update shop_order_goods
-    set state = 6
-    where 1=1
-    and user_id = #{user_id}
+    <set >
+      <if test="hash != null" >
+        confirm_receipt_hash = #{hash},
+      </if>
+      state = 6
+    </set>
+    where user_id = #{user_id}
     and shop_order_no = #{shop_order_no}
     and goods_id = #{goods_id}
   </update>

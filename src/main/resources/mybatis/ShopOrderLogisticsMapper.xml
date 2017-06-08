@@ -92,7 +92,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="getLogistics" parameterType="com.ecochain.ledger.model.PageData" resultType="com.ecochain.ledger.model.PageData">
-        select a.logistics_no,a.logistics_name,b.logistics_msg,DATE_FORMAT(a.createtime,'%Y-%m-%d %H:%i:%s') createtime,DATE_FORMAT(b.create_time,'%Y-%m-%d %H:%i:%s') logistics_msg_time
+        select a.logistics_no,a.logistics_name,b.logistics_msg,DATE_FORMAT(a.createtime,'%Y-%m-%d %H:%i:%s') createtime,DATE_FORMAT(b.create_time,'%Y-%m-%d %H:%i:%s') logistics_msg_time,b.logistics_detail_hash
         from shop_order_logistics a LEFT JOIN shop_order_logistics_detail b ON  a.logistics_no = b.logistics_no
         where 1=1
         and a.logistics_no = #{logistics_no}
