@@ -99,6 +99,10 @@ public class BlockChainTask {
                         data.put("hash", hash);
                         HttpTool.doGet("http://localhost:"+servicePort+"/"+serviceName+"/api/rest/logistics/transferLogisticsWithOutBlockChain?logistics_no="+data.getString("logistics_no") +"&logistics_msg="+data.getString("logistics_msg") +"&create_time="+ URLEncoder.encode(data.getString("create_time"),"UTF-8") +"&hash="+resultInfo.getString("hash") +"&shop_order_no="+ data.getString("shop_order_no") +"");
                         this.blockDataHashService.insert(blockDataHash);
+                    }else if("confirmReceipt".equals(data.getString("bussType"))){
+                        data.put("hash", hash);
+                        HttpTool.doGet("http://localhost:"+servicePort+"/"+serviceName+"/api/rest/shopOrder/confirmReceipt?&user_id="+data.getString("user_id") +"&order_no="+data.getString("shop_order_no") +"&goods_id="+data.getString("goods_id")+"&hash="+resultInfo.getString("hash") +"");
+                        this.blockDataHashService.insert(blockDataHash);
                     }
 
                 }

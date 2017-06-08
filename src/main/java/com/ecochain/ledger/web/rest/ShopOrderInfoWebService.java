@@ -863,6 +863,51 @@ public class ShopOrderInfoWebService extends BaseWebService {
     }*/
 
     /**
+     * @author lisandro
+     * @date 2017年6月8日10:41:15
+     * @describe 确认收货
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/confirmReceipt", method = RequestMethod.GET)
+    @ApiOperation(nickname = "确认收货", value = "确认收货", notes = "确认收货！")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "user_id", value = "user_id", required = true, paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = "order_no", value = "订单号", required = false, paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = "goods_id", value = "商品ID", required = false, paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = "hash", value = "hash", required = false, paramType = "query", dataType = "String"),
+    })
+    public AjaxResponse confirmReceipt(HttpServletRequest request) {
+        AjaxResponse ar = new AjaxResponse();
+        try {
+            PageData pd = new PageData();
+            pd = this.getPageData();
+            String order_no = pd.getString("order_no");
+            if (StringUtil.isEmpty(order_no)) {
+                return fastReturn("订单号不能为空！",false,"订单号不能为空！",CodeConstant.PARAM_ERROR);
+            }
+            if (StringUtil.isEmpty(pd.getString("goods_id"))) {
+                return fastReturn("商品ID不能为空！",false,"商品ID不能为空！",CodeConstant.PARAM_ERROR);
+            }
+            pd.put("shop_order_no", order_no);
+            pd.put("bussType", "confirmReceipt");
+            pd.put("user_id", pd.getString("user_id"));
+            PageData orderGoods = shopOrderGoodsService.getOrderGoods(pd, Constant.VERSION_NO);
+            if (orderGoods == null) {
+                return fastReturn("订单不存在",false,"订单不存在",CodeConstant.ORDER_NO_EXISTS);
+            }
+            if (shopOrderInfoService.updateStateByOrderNo(pd, Constant.VERSION_NO)) {
+                return fastReturn("确认收货成功！",true,"确认收货成功！",CodeConstant.SC_OK);
+            } else {
+                return fastReturn("确认收货失败！",false,"确认收货失败！",CodeConstant.UPDATE_FAIL);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ar;
+    }
+
+    /**
      * @param request
      * @describe:分页查询订单列表
      * @author: zhangchunming
