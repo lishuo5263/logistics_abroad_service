@@ -221,6 +221,7 @@ public class UsersWebService extends BaseWebService {
     @ApiOperation(nickname = "用户注册", value = "用户注册", notes = "用户注册")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "account", value = "登陆账号，仅支持手机号注册", required = true, paramType = "query", dataType = "String"),
+        @ApiImplicitParam(name = "user_name", value = "用户名", required = true, paramType = "query", dataType = "String"),
         @ApiImplicitParam(name = "password", value = "密码，6-16位数字", required = true, paramType = "query", dataType = "String")
     })
     public AjaxResponse register(HttpServletRequest request,HttpServletResponse response){
@@ -232,6 +233,7 @@ public class UsersWebService extends BaseWebService {
             logger.info("--------------register  pd value is "+pd.toString());
             String account = StringUtil.isEmpty(pd.getString("account"))?null:pd.getString("account").trim();
             String password = StringUtil.isEmpty(pd.getString("password"))?null:pd.getString("password").trim();
+            String user_name = StringUtil.isEmpty(pd.getString("user_name"))?null:pd.getString("user_name").trim();
             if(StringUtil.isEmpty(account)){
                 ar.setSuccess(false);
                 ar.setMessage("请输入登陆账号！");
@@ -250,6 +252,12 @@ public class UsersWebService extends BaseWebService {
                 ar.setErrorCode(CodeConstant.ERROE_PASSWORD_LETTER_NUM);
                 return ar;
             }*/
+            if(StringUtil.isEmpty(user_name)){
+                ar.setSuccess(false);
+                ar.setMessage("用户名不能为空！");
+                ar.setErrorCode(CodeConstant.PARAM_ERROR);
+                return ar;
+            }
             if(StringUtil.isEmpty(password)){
                 ar.setSuccess(false);
                 ar.setMessage("请输入密码！");
@@ -275,7 +283,7 @@ public class UsersWebService extends BaseWebService {
             pd.put("account", account);
             pd.put("user_type", "7");//境外物流
             pd.put("mobile_phone", account);
-            pd.put("user_name", account);
+            pd.put("user_name", user_name);
             pd.put("status", "1");//会员状态默认启用
             pd.put("password", password);
             pd.put("lastlogin_ip", InternetUtil.getRemoteAddr(request));
