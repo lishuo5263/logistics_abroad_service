@@ -29,6 +29,11 @@
         where sol.logistics_no=sold.logistics_no
         and sol.logistics_no=#{logisticsNo}
     </select>
+    <select id="findLogisticsInfoByOrderNo" resultType="map" parameterType="java.lang.String">
+        select sol.logistics_no
+        from shop_order_logistics sol
+        where  sol.shop_order_no=#{orderNo} limit 1
+    </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
         delete from shop_order_logistics_detail
