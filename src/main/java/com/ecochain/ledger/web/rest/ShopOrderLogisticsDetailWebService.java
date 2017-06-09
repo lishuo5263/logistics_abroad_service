@@ -1,18 +1,26 @@
 package com.ecochain.ledger.web.rest;
 
 
+import com.alibaba.fastjson.JSONObject;
+import com.ecochain.ledger.annotation.LoginVerify;
 import com.ecochain.ledger.base.BaseWebService;
 import com.ecochain.ledger.constants.CodeConstant;
 import com.ecochain.ledger.constants.Constant;
+import com.ecochain.ledger.constants.CookieConstant;
 import com.ecochain.ledger.mapper.ShopOrderInfoMapper;
 import com.ecochain.ledger.model.Page;
 import com.ecochain.ledger.model.PageData;
 import com.ecochain.ledger.service.ShopOrderLogisticsDetailService;
 import com.ecochain.ledger.util.AjaxResponse;
+import com.ecochain.ledger.util.DateUtil;
+import com.ecochain.ledger.util.RequestUtils;
+import com.ecochain.ledger.util.SessionUtil;
 import com.ecochain.ledger.util.StringUtil;
+
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +50,7 @@ public class ShopOrderLogisticsDetailWebService extends BaseWebService {
     /**
      * 物流转货(调区块链)
      */
+    @LoginVerify
     @GetMapping("/transferLogistics")
     @ApiOperation(nickname = "transferLogistics", value = "物流转货", notes = "物流转货！！")
     @ApiImplicitParams({
@@ -55,6 +65,10 @@ public class ShopOrderLogisticsDetailWebService extends BaseWebService {
         AjaxResponse ar = new AjaxResponse();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
+            String userstr = SessionUtil.getAttibuteForUser(RequestUtils.getRequestValue(CookieConstant.CSESSIONID, request));
+            JSONObject user = JSONObject.parseObject(userstr);
+            pd.put("user_name", user.getString("user_name"));
+            pd.put("create_time", DateUtil.getCurrDateTime());
             String logisticsNo = (String) pd.get("logistics_no");
             String type = pd.getString("type");
             if (!StringUtil.isNotEmpty(logisticsNo)) {
