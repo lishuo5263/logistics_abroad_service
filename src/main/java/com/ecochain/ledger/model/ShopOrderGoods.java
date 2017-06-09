@@ -26,9 +26,9 @@ public class ShopOrderGoods implements Serializable {
 
     private String isPromote; //是否火爆商品 1是 0否
 
-    private String tradeHash;
+    private String bussType;
 
-    private String  bussType;
+    private String tradeHash;
 
     private String consignee;
 
@@ -63,6 +63,8 @@ public class ShopOrderGoods implements Serializable {
     private String goodsAttrId;
 
     private String userCode;
+
+    private String userName;
 
     private String  csessionid;
 
@@ -103,9 +105,35 @@ public class ShopOrderGoods implements Serializable {
 
     private Date addTime;
 
+    private String createTime;
+
     private Date shippingTime;
 
     private String data;
+
+    public String getBussType() {
+        return bussType;
+    }
+
+    public void setBussType(String bussType) {
+        this.bussType = bussType;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
 
     public String getActivityId() {
         return activityId;
@@ -481,13 +509,5 @@ public class ShopOrderGoods implements Serializable {
 
     public void setData(String data) {
         this.data = data;
-    }
-
-    public String getBussType() {
-        return bussType;
-    }
-
-    public void setBussType(String bussType) {
-        this.bussType = bussType;
     }
 }
