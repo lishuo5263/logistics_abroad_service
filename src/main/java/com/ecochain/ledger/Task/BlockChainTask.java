@@ -101,7 +101,7 @@ public class BlockChainTask {
                         this.blockDataHashService.insert(blockDataHash);
                     }else if("confirmReceipt".equals(data.getString("bussType"))){
                         data.put("hash", hash);
-                        HttpTool.doGet("http://localhost:"+servicePort+"/"+serviceName+"/api/rest/shopOrder/confirmReceipt?&user_id="+data.getString("user_id") +"&order_no="+data.getString("shop_order_no") +"&goods_id="+data.getString("goods_id")+"&hash="+resultInfo.getString("hash") +"&create_time="+URLEncoder.encode(data.getString("create_time"),"UTF-8")+"&user_name="+resultInfo.getString("user_name")+"");
+                        HttpTool.doGet("http://localhost:"+servicePort+"/"+serviceName+"/api/rest/shopOrder/confirmReceipt?&user_id="+data.getString("user_id") +"&order_no="+data.getString("shop_order_no") +"&goods_id="+data.getString("goods_id")+"&hash="+resultInfo.getString("hash") +"&create_time="+URLEncoder.encode(data.getString("create_time"),"UTF-8")+"&user_name="+data.getString("user_name")+"");
                         this.blockDataHashService.insert(blockDataHash);
                     }
 
