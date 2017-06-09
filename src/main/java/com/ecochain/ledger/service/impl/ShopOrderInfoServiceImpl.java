@@ -593,8 +593,7 @@ public class ShopOrderInfoServiceImpl implements ShopOrderInfoService {
         logger.info("====================确认收货新加物流信息=======start=================");
         Map infoMap=shopOrderLogisticsDetailMapper.findLogisticsInfoByOrderNo(pd.getString("shop_order_no"));
         pd.put("logistics_no", infoMap.get("logistics_no"));
-        //pd.put("logistics_msg", pd.getString("user_name")+"确认收货");
-        System.out.println(pd.getString("user_name")+"确认收货");
+        pd.put("logistics_msg", "买家:"+pd.getString("user_name")+"已确认收货");
         pd.put("logistics_msg", "确认收货");
         pd.put("logistics_detail_hash", pd.getString("hash"));
         if(shopOrderLogisticsDetailService.transferLogisticsWithOutBlockChain(pd, Constant.VERSION_NO)){
