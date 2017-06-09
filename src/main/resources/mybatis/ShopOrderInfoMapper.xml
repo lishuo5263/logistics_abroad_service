@@ -377,7 +377,7 @@
       and  b.state &gt;= 3
     </if>
     <if test="user_type != null and user_type == 7 " >
-      and   a.order_status = '11'
+      and   a.order_status in( '11','12')
     </if>
     group by a.order_id
     order by a.add_time desc
