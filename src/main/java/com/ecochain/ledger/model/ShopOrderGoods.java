@@ -103,7 +103,7 @@ public class ShopOrderGoods implements Serializable {
 
     private BigDecimal orderAmount;
 
-    private Date addTime;
+    private String addTime;
 
     private String createTime;
 
@@ -111,13 +111,7 @@ public class ShopOrderGoods implements Serializable {
 
     private String data;
 
-    public String getBussType() {
-        return bussType;
-    }
 
-    public void setBussType(String bussType) {
-        this.bussType = bussType;
-    }
 
     public String getUserName() {
         return userName;
@@ -383,11 +377,19 @@ public class ShopOrderGoods implements Serializable {
         this.orderAmount = orderAmount;
     }
 
-    public Date getAddTime() {
+    public String getBussType() {
+        return bussType;
+    }
+
+    public void setBussType(String bussType) {
+        this.bussType = bussType;
+    }
+
+    public String getAddTime() {
         return addTime;
     }
 
-    public void setAddTime(Date addTime) {
+    public void setAddTime(String addTime) {
         this.addTime = addTime;
     }
 
