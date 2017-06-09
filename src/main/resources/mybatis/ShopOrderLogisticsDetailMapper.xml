@@ -19,7 +19,7 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
     <select id="findLogisticsInfoByNo" resultType="map" parameterType="java.lang.String">
-        select sol.shop_order_no,sol.logistics_no,sol.logistics_name,sol.logistics_hash,sol.logistics_hash
+        select sol.shop_order_no,sol.logistics_no,sol.logistics_name,sol.logistics_hash
         from shop_order_logistics sol
         where sol.logistics_no=#{logisticsNo}
     </select>
