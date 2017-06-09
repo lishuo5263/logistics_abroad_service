@@ -358,7 +358,7 @@
       select * from users_details 
   </select>
   <select id="getUserInfoByAccount" parameterType="java.lang.String" resultType="com.ecochain.ledger.model.PageData">
-      select b.user_id,b.account,a.email,a.public_key,a.address,a.seeds,a.user_type,a.id,a.mobile_phone
+      select b.user_id,b.account,a.email,a.public_key,a.address,a.seeds,a.user_type,a.id,a.mobile_phone,a.user_name
       from users_details a ,user_login b where a.id = b.user_id and b.account = #{account}
   </select>
 </mapper>
