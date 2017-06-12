@@ -67,6 +67,7 @@ public class ShopOrderLogisticsDetailWebService extends BaseWebService {
         try {
             String userstr = SessionUtil.getAttibuteForUser(RequestUtils.getRequestValue(CookieConstant.CSESSIONID, request));
             JSONObject user = JSONObject.parseObject(userstr);
+            pd.remove("CSESSIONID");//add by zhangchunming
             pd.put("user_name", user.getString("user_name"));
             pd.put("create_time", DateUtil.getCurrDateTime());
             String logisticsNo = (String) pd.get("logistics_no");
