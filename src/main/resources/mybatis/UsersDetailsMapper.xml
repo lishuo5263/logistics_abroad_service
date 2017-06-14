@@ -349,7 +349,7 @@
         </if>
   </select>
    <select id="getUserInfoByUserId" parameterType="java.lang.Integer" resultType="com.ecochain.ledger.model.PageData">
-      select b.user_id,b.account,a.email,a.public_key,a.address,a.seeds,a.user_type,a.id,a.mobile_phone from users_details a,user_login b 
+      select b.user_id,b.account,a.email,a.public_key,a.address,a.seeds,a.user_type,a.id,a.mobile_phone,a.user_name from users_details a,user_login b 
       where 1=1
       and a.id = b.user_id
       and a.id = #{user_id}
