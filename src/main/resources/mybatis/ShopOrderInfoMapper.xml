@@ -819,6 +819,15 @@
     set order_status =  11
     where order_no = #{order_no}
   </update>
+  <update id="updateOrderStatusByOrderNo2" parameterType="com.ecochain.ledger.model.PageData">
+    update shop_order_info
+    <set >
+      <if test="order_status != null" >
+        order_status = #{order_status}
+      </if>
+    </set>
+    where order_no = #{shop_order_no}
+  </update>
   <select id="getOrderStatusByOrderNo" resultType="java.lang.String" parameterType="java.lang.String" >
     select order_status
     from shop_order_info
