@@ -67,12 +67,8 @@ public class ShopOrderLogisticsDetailServiceImpl implements ShopOrderLogisticsDe
             }
         }
         JSONObject json = null;
-        if("transferLogistics".equals(pd.getString("type"))){
-            pd.put("order_status", "11");
-        }else{
-            pd.put("order_status","8");
-        }
         pd.put("flag", "outer");
+        pd.put("order_status", "11");
         pd.put("create_time", DateUtil.getCurrDateTime());
         logger.info("====================测试代码========start================");
         String jsonStr = HttpUtil.sendPostData("" + kql_url + "/get_new_key", "");
@@ -119,7 +115,9 @@ public class ShopOrderLogisticsDetailServiceImpl implements ShopOrderLogisticsDe
         shopOrderLogisticsDetail.setLogisticsDetailHash(pd.getString("logistics_detail_hash"));
         shopOrderLogisticsDetail.setCreateTime(DateUtil.fomatDateDetail(pd.getString("create_time")));
         this.shopOrderLogisticsDetailService.insertSelective(shopOrderLogisticsDetail);
-        this.shopOrderInfoMapper.updateOrderStatusByOrderNo2(pd);
+        if(!"notUpdate".equals(pd.getString("flag"))){
+            this.shopOrderInfoMapper.updateOrderStatusByOrderNo2(pd);
+        }
         return true;
     }
 }
