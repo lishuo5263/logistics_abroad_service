@@ -1,5 +1,6 @@
 package com.ecochain.ledger.mapper;
 
+import com.ecochain.ledger.model.PageData;
 import com.ecochain.ledger.model.ShopOrderGoods;
 import com.ecochain.ledger.model.ShopOrderInfo;
 
@@ -36,6 +37,8 @@ public interface ShopOrderInfoMapper {
     boolean updateShopOrderGoodsCancleStatus(String orderNo);
 
     boolean updateOrderStatusByOrderNo(String orderNo);
+
+    boolean updateOrderStatusByOrderNo2(PageData pd);
 
     boolean updateShopGoodsGoods(String orderNo);
 

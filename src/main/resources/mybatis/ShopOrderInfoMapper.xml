@@ -373,9 +373,7 @@
       and   a.user_id = #{user_id}
 <!--       and   a.order_status not in('4','9') -->
     </if>
-    <if test="user_type != null and user_type == 6 " >
       and  b.state &gt;= 3
-    </if>
     <if test="user_type != null and user_type == 7 " >
       and   a.order_status in( '11','12')
     </if>
@@ -818,6 +816,15 @@
     update shop_order_info
     set order_status =  11
     where order_no = #{order_no}
+  </update>
+  <update id="updateOrderStatusByOrderNo2" parameterType="com.ecochain.ledger.model.PageData">
+    update shop_order_info
+    <set >
+      <if test="order_status != null" >
+        order_status = #{order_status}
+      </if>
+    </set>
+    where order_no = #{shop_order_no}
   </update>
   <select id="getOrderStatusByOrderNo" resultType="java.lang.String" parameterType="java.lang.String" >
     select order_status
