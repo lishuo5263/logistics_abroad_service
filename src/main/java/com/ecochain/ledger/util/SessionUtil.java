@@ -6,7 +6,7 @@ import org.apache.commons.codec.binary.Base64;
 public class SessionUtil {
 
     //用户超时分钟
-	private static Integer sexp = 30;
+	private static Integer sexp = 30*60;
 	
 	//验证码超时时间
 	private static Integer cexp = 10;

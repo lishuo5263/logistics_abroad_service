@@ -560,7 +560,7 @@
     update shop_order_goods
     set state = #{state}
     where shop_order_id = #{order_id}
-    and user_id = #{user_id}
+<!--     and user_id = #{user_id} -->
   </update>
   <update id="updateShopOrderStatus" parameterType="com.ecochain.ledger.model.PageData">
     update shop_order_info
@@ -573,7 +573,7 @@
        </if>
     </set>
     where 1=1
-    and user_id = #{user_id}
+<!--     and user_id = #{user_id} -->
     and order_no = #{order_no}
   </update>
 
