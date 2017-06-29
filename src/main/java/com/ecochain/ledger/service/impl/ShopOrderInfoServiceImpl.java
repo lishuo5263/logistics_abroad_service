@@ -493,7 +493,7 @@ public class ShopOrderInfoServiceImpl implements ShopOrderInfoService {
         if(StringUtil.isNotEmpty(json.getString("result"))&&!json.getString("result").contains("failure")){
             pd.put("logistics_hash",json.getString("result"));
         }*/
-        String kql_url=null;
+        /*String kql_url=null;
         List<PageData> codeList =sysGenCodeService.findByGroupCode("QKL_URL", Constant.VERSION_NO);
         for(PageData mapObj:codeList){
             if("QKL_URL".equals(mapObj.get("code_name"))){
@@ -528,7 +528,7 @@ public class ShopOrderInfoServiceImpl implements ShopOrderInfoService {
             blockDataHash.setDataHash(StringUtil.isEmpty(json.getString("result"))== true ? pd.getString("logistics_hash") :json.getString("result"));
             blockDataHash.setBlockCreateTime(new Date());
             this.blockDataHashMapper.insert(blockDataHash);
-        }
+        }*/
         //添加物流信息
         shopOrderLogisticsService.insertSelective(pd, Constant.VERSION_NO);
         //修改订单商品关联表信息（添加物流单号及修改发货状态）
