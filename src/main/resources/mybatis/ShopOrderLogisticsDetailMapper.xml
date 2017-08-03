@@ -120,4 +120,8 @@
       modify_time = #{modifyTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+    <select id="findLogisticsInfoByOrderNo2" resultType="java.lang.Integer" parameterType="com.ecochain.ledger.model.PageData">
+        select count(1)from shop_order_logistics_detail where logistics_msg=#{logistics_msg} and logistics_no =#{logistics_no}
+    </select>
 </mapper>

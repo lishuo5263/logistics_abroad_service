@@ -1,9 +1,10 @@
 package com.ecochain.ledger.mapper;
 
-import com.ecochain.ledger.model.ShopOrderLogisticsDetail;
-
 import java.util.List;
 import java.util.Map;
+
+import com.ecochain.ledger.model.PageData;
+import com.ecochain.ledger.model.ShopOrderLogisticsDetail;
 
 public interface ShopOrderLogisticsDetailMapper {
     int deleteByPrimaryKey(Integer id);
@@ -23,4 +24,7 @@ public interface ShopOrderLogisticsDetailMapper {
     List<Map<String,Object>> findLogisticsInfoByNo2(String logisticsNo);
 
     Map findLogisticsInfoByOrderNo(String orderNo);
+    
+    int findLogisticsInfoByOrderNo2(PageData pd);
+
 }

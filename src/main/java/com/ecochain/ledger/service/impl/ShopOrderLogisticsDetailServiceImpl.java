@@ -56,6 +56,11 @@ public class ShopOrderLogisticsDetailServiceImpl implements ShopOrderLogisticsDe
     public int insertSelective(ShopOrderLogisticsDetail record) {
         return shopOrderLogisticsDetailMapper.insertSelective(record);
     }
+    
+    @Override
+    public int searchTransferLogistics(PageData pd, String versionNo) throws Exception {
+        return shopOrderLogisticsDetailMapper.findLogisticsInfoByOrderNo2(pd);
+    }
 
     @Override
     public boolean transferLogistics(PageData pd, String versionNo) throws Exception {
