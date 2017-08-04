@@ -1,18 +1,17 @@
 package com.ecochain.ledger.base;
 
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.ecochain.ledger.model.Page;
 import com.ecochain.ledger.model.PageData;
 import com.ecochain.ledger.util.AjaxResponse;
 import com.ecochain.ledger.util.Logger;
 import com.ecochain.ledger.util.UuidUtil;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 public class BaseWebService {
@@ -25,7 +24,7 @@ public class BaseWebService {
 	protected PageData pd = new PageData();
 	protected HttpServletResponse response;
 	/**
-	 * 得到PageData
+	 * 得到PageData1
 	 */
 	public PageData getPageData(){
 		return new PageData(this.getRequest());
