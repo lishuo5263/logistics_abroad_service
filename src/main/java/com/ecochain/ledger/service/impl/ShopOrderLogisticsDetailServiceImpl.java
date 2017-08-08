@@ -1,25 +1,28 @@
 package com.ecochain.ledger.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ecochain.ledger.constants.Constant;
+import com.ecochain.ledger.mapper.FabricBlockInfoMapper;
 import com.ecochain.ledger.mapper.ShopOrderInfoMapper;
 import com.ecochain.ledger.mapper.ShopOrderLogisticsDetailMapper;
+import com.ecochain.ledger.model.FabricBlockInfo;
 import com.ecochain.ledger.model.PageData;
 import com.ecochain.ledger.model.ShopOrderLogisticsDetail;
 import com.ecochain.ledger.service.ShopOrderLogisticsDetailService;
 import com.ecochain.ledger.service.SysGenCodeService;
 import com.ecochain.ledger.util.Base64;
 import com.ecochain.ledger.util.DateUtil;
-import com.ecochain.ledger.util.HttpUtil;
 import com.ecochain.ledger.util.StringUtil;
+import com.ecochain.ledger.util.UuidUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import static com.ecochain.ledger.util.HttpTool.doPost;
 
 /**
  * Created by Lisandro on 2017/6/1.
@@ -35,6 +38,9 @@ public class ShopOrderLogisticsDetailServiceImpl implements ShopOrderLogisticsDe
 
     @Autowired
     private ShopOrderInfoMapper shopOrderInfoMapper;
+
+    @Autowired
+    private FabricBlockInfoMapper fabricBlockInfoMapper;
 
     @Autowired
     private ShopOrderLogisticsDetailService shopOrderLogisticsDetailService;
@@ -75,7 +81,7 @@ public class ShopOrderLogisticsDetailServiceImpl implements ShopOrderLogisticsDe
         pd.put("flag", "outer");
         pd.put("order_status", "11");
         pd.put("create_time", DateUtil.getCurrDateTime());
-        logger.info("====================测试代码========start================");
+        /*logger.info("====================测试代码========start================");
         String jsonStr = HttpUtil.sendPostData("" + kql_url + "/get_new_key", "");
         JSONObject keyJsonObj = JSONObject.parseObject(jsonStr);
         PageData keyPd = new PageData();
@@ -108,7 +114,49 @@ public class ShopOrderLogisticsDetailServiceImpl implements ShopOrderLogisticsDe
             pd.put("order_no",pd.getString("shop_order_no"));
             this.shopOrderInfoMapper.updateOrderStatusByOrderNo2(pd);
         }
-        logger.info("====================测试代码=======end=================");
+        logger.info("====================测试代码=======end=================");*/
+        logger.info("====================调用fabric测试代码=======start=================");
+        String uuid = UuidUtil.get32UUID();
+        String bussType="outerTransferLogisticss";
+        String jsonInfo= Base64.getBase64(JSONObject.toJSONString(pd.toString()));
+        String finalInfo =jsonInfo.replace("\n","").replace("\r","");
+        StringBuffer stringBuffer = new StringBuffer("{\n" +
+                "    \"fcn\":\"createObj\",\n" +
+                "    \"args\":[\n" +
+                "        \""+uuid+"\",\n" +
+                "        \""+bussType+"\",\n" +
+                "\""+finalInfo+"\"\n" +
+                "    ]\n" +
+                "}");
+        System.out.println(JSONObject.toJSONString(pd.toString()));
+        System.out.println("调用fabric给的加密数据信息为------------------>"+finalInfo);
+        String fabrickInfo = doPost(kql_url+"/createObj", stringBuffer.toString());
+        logger.info("====================调用fabric接口返回为=========================" + fabrickInfo);
+        logger.info("====================调用fabric测试代码=======end=================");
+        FabricBlockInfo fabricBlockInfo =new FabricBlockInfo();
+        fabricBlockInfo.setFabricHash(Base64.getBase64(fabrickInfo)); //fabric uuid
+        fabricBlockInfo.setFabricUuid(uuid); //java
+        fabricBlockInfo.setHashData(jsonInfo);
+        fabricBlockInfo.setFabricBussType(bussType);
+        fabricBlockInfo.setCreateTime(new Date());
+        fabricBlockInfoMapper.insert(fabricBlockInfo);
+        logger.info("====================调用fabric接口记录DB=======success=================");
+        if (StringUtil.isNotEmpty(fabrickInfo)) {
+            pd.put("logistics_detail_hash", Base64.getBase64(fabrickInfo));
+        }
+        ShopOrderLogisticsDetail shopOrderLogisticsDetail = new ShopOrderLogisticsDetail();
+        shopOrderLogisticsDetail.setLogisticsNo(pd.getString("logistics_no"));
+        shopOrderLogisticsDetail.setLogisticsMsg(pd.getString("logistics_msg"));
+        shopOrderLogisticsDetail.setLogisticsDetailHash(pd.getString("logistics_detail_hash"));
+        shopOrderLogisticsDetail.setCreateTime(DateUtil.fomatDateDetail(pd.getString("create_time")));
+        this.shopOrderLogisticsDetailService.insertSelective(shopOrderLogisticsDetail);
+        if("transferLogistics".equals(pd.getString("type"))){
+            pd.put("order_no",pd.getString("shop_order_no"));
+            this.shopOrderInfoMapper.updateOrderStatusByOrderNo2(pd);
+        }else{
+            pd.put("order_no",pd.getString("shop_order_no"));
+            this.shopOrderInfoMapper.updateOrderStatusByOrderNo2(pd);
+        }
         return true;
     }
 

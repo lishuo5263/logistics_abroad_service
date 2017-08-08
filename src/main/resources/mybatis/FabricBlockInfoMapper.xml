@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecochain.ledger.mapper.FabricBlockInfoMapper">
+  <resultMap id="BaseResultMap" type="com.ecochain.ledger.model.FabricBlockInfo">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="fabric_hash" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="fabric_uuid" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="fabric_buss_type" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="hash_data" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="modify_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fabric_block_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ecochain.ledger.model.FabricBlockInfo">
+    insert into fabric_block_info (id, fabric_hash, fabric_uuid, 
+      fabric_buss_type, hash_data, create_time, 
+      modify_time, update_time)
+    values (#{id,jdbcType=INTEGER}, #{fabricHash,jdbcType=VARCHAR}, #{fabricUuid,jdbcType=VARCHAR}, 
+      #{fabricBussType,jdbcType=VARCHAR}, #{hashData,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.ecochain.ledger.model.FabricBlockInfo">
+    update fabric_block_info
+    set fabric_hash = #{fabricHash,jdbcType=VARCHAR},
+      fabric_uuid = #{fabricUuid,jdbcType=VARCHAR},
+      fabric_buss_type = #{fabricBussType,jdbcType=VARCHAR},
+      hash_data = #{hashData,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, fabric_hash, fabric_uuid, fabric_buss_type, hash_data, create_time, modify_time, 
+    update_time
+    from fabric_block_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, fabric_hash, fabric_uuid, fabric_buss_type, hash_data, create_time, modify_time, 
+    update_time
+    from fabric_block_info
+  </select>
+</mapper>
