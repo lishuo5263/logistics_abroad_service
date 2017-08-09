@@ -17,13 +17,15 @@
     delete from fabric_block_info
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.ecochain.ledger.model.FabricBlockInfo">
-    insert into fabric_block_info (id, fabric_hash, fabric_uuid, 
-      fabric_buss_type, hash_data, create_time, 
-      modify_time, update_time)
-    values (#{id,jdbcType=INTEGER}, #{fabricHash,jdbcType=VARCHAR}, #{fabricUuid,jdbcType=VARCHAR}, 
-      #{fabricBussType,jdbcType=VARCHAR}, #{hashData,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{modifyTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  <insert id="insert" parameterType="com.ecochain.ledger.model.FabricBlockInfo" >
+    insert into fabric_block_info (id, fabric_block_hash, fabric_block_height,
+      fabric_hash, fabric_uuid, fabric_buss_type,
+      hash_data, create_time, modify_time,
+      update_time)
+    values (#{id,jdbcType=INTEGER}, #{fabricBlockHash,jdbcType=VARCHAR}, #{fabricBlockHeight,jdbcType=VARCHAR},
+      #{fabricHash,jdbcType=VARCHAR}, #{fabricUuid,jdbcType=VARCHAR}, #{fabricBussType,jdbcType=VARCHAR},
+      #{hashData,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP},
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.ecochain.ledger.model.FabricBlockInfo">
     update fabric_block_info

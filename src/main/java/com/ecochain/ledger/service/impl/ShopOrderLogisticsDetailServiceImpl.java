@@ -10,10 +10,7 @@ import com.ecochain.ledger.model.PageData;
 import com.ecochain.ledger.model.ShopOrderLogisticsDetail;
 import com.ecochain.ledger.service.ShopOrderLogisticsDetailService;
 import com.ecochain.ledger.service.SysGenCodeService;
-import com.ecochain.ledger.util.Base64;
-import com.ecochain.ledger.util.DateUtil;
-import com.ecochain.ledger.util.StringUtil;
-import com.ecochain.ledger.util.UuidUtil;
+import com.ecochain.ledger.util.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -133,10 +130,21 @@ public class ShopOrderLogisticsDetailServiceImpl implements ShopOrderLogisticsDe
         String fabrickInfo = doPost(kql_url+"/createObj", stringBuffer.toString());
         logger.info("====================调用fabric接口返回为=========================" + fabrickInfo);
         logger.info("====================调用fabric测试代码=======end=================");
-        FabricBlockInfo fabricBlockInfo =new FabricBlockInfo();
+        String block_height_str = HttpTool.doGet(kql_url+"/channel/height");
+        String low = JSONObject.parseObject(block_height_str).getString("low");
+        int block_height = (Integer.valueOf(low)-1);
+        String block_info = HttpTool.doGet(kql_url+"/channel/blocks/"+block_height);
+        while(!block_info.contains(fabrickInfo)){
+            --block_height;
+            block_info = HttpTool.doGet(kql_url+"/channel/blocks/"+block_height);
+        }
+        JSONObject block_info_obj = JSONObject.parseObject(block_info);
+        FabricBlockInfo fabricBlockInfo = new FabricBlockInfo();
+        fabricBlockInfo.setFabricBlockHash(block_info_obj.getJSONObject("header").getString("data_hash"));
+        fabricBlockInfo.setFabricBlockHeight(String.valueOf(block_height));
         fabricBlockInfo.setFabricHash(Base64.getBase64(fabrickInfo)); //fabric uuid
         fabricBlockInfo.setFabricUuid(uuid); //java
-        fabricBlockInfo.setHashData(jsonInfo);
+        fabricBlockInfo.setHashData(JSONObject.toJSONString(pd.toString()));
         fabricBlockInfo.setFabricBussType(bussType);
         fabricBlockInfo.setCreateTime(new Date());
         fabricBlockInfoMapper.insert(fabricBlockInfo);
