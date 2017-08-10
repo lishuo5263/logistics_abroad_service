@@ -1,5 +1,6 @@
 package com.ecochain.ledger.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ecochain.ledger.constants.Constant;
 import com.ecochain.ledger.mapper.FabricBlockInfoMapper;
@@ -142,15 +143,15 @@ public class ShopOrderLogisticsDetailServiceImpl implements ShopOrderLogisticsDe
         FabricBlockInfo fabricBlockInfo = new FabricBlockInfo();
         fabricBlockInfo.setFabricBlockHash(block_info_obj.getJSONObject("header").getString("data_hash"));
         fabricBlockInfo.setFabricBlockHeight(String.valueOf(block_height));
-        fabricBlockInfo.setFabricHash(Base64.getBase64(fabrickInfo)); //fabric uuid
+        fabricBlockInfo.setFabricHash(fabrickInfo); //fabric uuid
         fabricBlockInfo.setFabricUuid(uuid); //java
-        fabricBlockInfo.setHashData(JSONObject.toJSONString(pd.toString()));
+        fabricBlockInfo.setHashData(JSON.toJSONString(pd));
         fabricBlockInfo.setFabricBussType(bussType);
         fabricBlockInfo.setCreateTime(new Date());
         fabricBlockInfoMapper.insert(fabricBlockInfo);
         logger.info("====================调用fabric接口记录DB=======success=================");
         if (StringUtil.isNotEmpty(fabrickInfo)) {
-            pd.put("logistics_detail_hash", Base64.getBase64(fabrickInfo));
+            pd.put("logistics_detail_hash", fabrickInfo);
         }
         ShopOrderLogisticsDetail shopOrderLogisticsDetail = new ShopOrderLogisticsDetail();
         shopOrderLogisticsDetail.setLogisticsNo(pd.getString("logistics_no"));
