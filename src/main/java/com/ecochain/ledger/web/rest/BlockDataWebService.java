@@ -23,6 +23,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.ecochain.ledger.base.BaseWebService;
 import com.ecochain.ledger.constants.CodeConstant;
 import com.ecochain.ledger.constants.Constant;
+import com.ecochain.ledger.mapper.FabricBlockInfoMapper;
+import com.ecochain.ledger.model.FabricBlockInfo;
 import com.ecochain.ledger.model.PageData;
 import com.ecochain.ledger.service.SysGenCodeService;
 import com.ecochain.ledger.util.AjaxResponse;
@@ -43,6 +45,8 @@ public class BlockDataWebService extends BaseWebService{
     
     @Autowired
     private SysGenCodeService sysGenCodeService;
+    @Autowired
+    private FabricBlockInfoMapper fabricBlockInfoMapper;
 
 
     /**
@@ -109,26 +113,26 @@ public class BlockDataWebService extends BaseWebService{
     public AjaxResponse getBlockList(HttpServletRequest request){
         AjaxResponse ar = new AjaxResponse();
         Map<String,Object> data = new HashMap<String, Object>();
-        PageData pd = this.getPageData();
+        PageData pd = new PageData();
+        pd = this.getPageData();
         try {
-            String kql_url =null;
-            List<PageData> codeList =sysGenCodeService.findByGroupCode("QKL_URL", Constant.VERSION_NO);
-            for(PageData mapObj:codeList){
-                if("QKL_URL".equals(mapObj.get("code_name"))){
-                    kql_url = mapObj.get("code_value").toString();
-                }
+            if(pd.getRows()==null){
+                ar.setErrorCode(CodeConstant.PARAM_ERROR);
+                ar.setMessage("请输入查询条数!");
+                ar.setSuccess(false);
+                return ar;
             }
-            String rows = "10";
-            if(pd.getRows()!=null){
-                rows = String.valueOf(pd.getRows());
+            JSONObject blockData = new JSONObject();
+            JSONArray array = new JSONArray();
+            List<FabricBlockInfo> dataList10 = fabricBlockInfoMapper.getDataList10(pd.getRows());
+            for(FabricBlockInfo fabricBlockInfo:dataList10){
+                JSONObject blockJson = new JSONObject();
+                blockJson.put("generateTime", DateUtil.stampToDate1(String.valueOf(fabricBlockInfo.getCreateTime().getTime())));
+                blockJson.put("blockHeight", fabricBlockInfo.getFabricBlockHeight());
+                blockJson.put("blockHash", fabricBlockInfo.getFabricBlockHash());
+                array.add(blockJson);
             }
-            String result = HttpTool.doPost(kql_url+"/GetBlockList", rows);
-            JSONObject blockData = JSONObject.parseObject(result);
-            JSONArray blockArray  = blockData.getJSONArray("result");
-            for(Object block :blockArray ){
-                JSONObject blockJson = (JSONObject)block;
-                blockJson.put("generateTime",DateUtil.stampToDate(blockJson.getString("generateTime")));
-            }
+            blockData.put("result", array);
             data.put("list", blockData);
             ar.setData(data);
             ar.setSuccess(true);
@@ -200,7 +204,8 @@ public class BlockDataWebService extends BaseWebService{
     public AjaxResponse getDataByHash(HttpServletRequest request){
         AjaxResponse ar = new AjaxResponse();
         Map<String,Object> data = new HashMap<String, Object>();
-        PageData pd = this.getPageData();
+        PageData pd = new PageData();
+        pd = this.getPageData();
         try {
             if(StringUtil.isEmpty(pd.getString("hash"))){
                 ar.setErrorCode(CodeConstant.PARAM_ERROR);
@@ -209,7 +214,15 @@ public class BlockDataWebService extends BaseWebService{
                 return ar;
             }
             
-            String kql_url =null;
+            String hash = pd.getString("hash");
+            int length = pd.getString("hash").length();
+            if(!(hash.substring(0, 1)+hash.substring(length-1, length)).equals("\"\"")){
+                ar.setErrorCode(CodeConstant.PARAM_ERROR);
+                ar.setMessage("参数格式错误，需带双引号！");
+                ar.setSuccess(false);
+                return ar;
+            }
+           /* String kql_url =null;
             List<PageData> codeList =sysGenCodeService.findByGroupCode("QKL_URL", Constant.VERSION_NO);
             for(PageData mapObj:codeList){
                 if("QKL_URL".equals(mapObj.get("code_name"))){
@@ -219,7 +232,19 @@ public class BlockDataWebService extends BaseWebService{
             String result = HttpTool.doPost(kql_url+"/get_data_from_sys", pd.getString("hash"));
             JSONObject blockData = JSONObject.parseObject(result);
             String dataStr = Base64.getFromBase64(blockData.getJSONObject("result").getString("data"));
-            blockData.getJSONObject("result").put("data", JSONObject.parseObject(dataStr));
+            blockData.getJSONObject("result").put("data", JSONObject.parseObject(dataStr));*/
+            
+            String fabric_hash = pd.getString("hash").replaceAll("\"", "");
+            FabricBlockInfo blockInfo = fabricBlockInfoMapper.getBlockByFabricHash(fabric_hash);
+            if(blockInfo == null){
+                ar.setData(null);
+                ar.setSuccess(true);
+                return ar;
+            }
+            JSONObject blockData = new JSONObject();
+            JSONObject result = new JSONObject();
+            result.put("data", blockInfo.getHashData());
+            blockData.put("result", result);
             data.put("result", blockData);
             ar.setData(data);
             ar.setSuccess(true);

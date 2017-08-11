@@ -1,35 +1,143 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ecochain.ledger.mapper.FabricBlockInfoMapper">
-  <resultMap id="BaseResultMap" type="com.ecochain.ledger.model.FabricBlockInfo">
-    <constructor>
-      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="fabric_hash" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="fabric_uuid" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="fabric_buss_type" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="hash_data" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
-      <arg column="modify_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
-      <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
-    </constructor>
+  <resultMap id="BaseResultMap" type="com.ecochain.ledger.model.FabricBlockInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fabric_block_hash" property="fabricBlockHash" jdbcType="VARCHAR" />
+    <result column="fabric_block_height" property="fabricBlockHeight" jdbcType="VARCHAR" />
+    <result column="fabric_hash" property="fabricHash" jdbcType="VARCHAR" />
+    <result column="fabric_uuid" property="fabricUuid" jdbcType="VARCHAR" />
+    <result column="fabric_buss_type" property="fabricBussType" jdbcType="VARCHAR" />
+    <result column="hash_data" property="hashData" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <sql id="Base_Column_List" >
+    id, fabric_block_hash, fabric_block_height, fabric_hash, fabric_uuid, fabric_buss_type, 
+    hash_data, create_time, modify_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from fabric_block_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from fabric_block_info
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.ecochain.ledger.model.FabricBlockInfo" >
-    insert into fabric_block_info (id, fabric_block_hash, fabric_block_height,
-      fabric_hash, fabric_uuid, fabric_buss_type,
-      hash_data, create_time, modify_time,
+    insert into fabric_block_info (id, fabric_block_hash, fabric_block_height, 
+      fabric_hash, fabric_uuid, fabric_buss_type, 
+      hash_data, create_time, modify_time, 
       update_time)
-    values (#{id,jdbcType=INTEGER}, #{fabricBlockHash,jdbcType=VARCHAR}, #{fabricBlockHeight,jdbcType=VARCHAR},
-      #{fabricHash,jdbcType=VARCHAR}, #{fabricUuid,jdbcType=VARCHAR}, #{fabricBussType,jdbcType=VARCHAR},
-      #{hashData,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP},
+    values (#{id,jdbcType=INTEGER}, #{fabricBlockHash,jdbcType=VARCHAR}, #{fabricBlockHeight,jdbcType=VARCHAR}, 
+      #{fabricHash,jdbcType=VARCHAR}, #{fabricUuid,jdbcType=VARCHAR}, #{fabricBussType,jdbcType=VARCHAR}, 
+      #{hashData,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <update id="updateByPrimaryKey" parameterType="com.ecochain.ledger.model.FabricBlockInfo">
+  <insert id="insertSelective" parameterType="com.ecochain.ledger.model.FabricBlockInfo" >
+    insert into fabric_block_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      <if test="fabricBlockHash != null" >
+        fabric_block_hash,
+      </if>
+      <if test="fabricBlockHeight != null" >
+        fabric_block_height,
+      </if>
+      <if test="fabricHash != null" >
+        fabric_hash,
+      </if>
+      <if test="fabricUuid != null" >
+        fabric_uuid,
+      </if>
+      <if test="fabricBussType != null" >
+        fabric_buss_type,
+      </if>
+      <if test="hashData != null" >
+        hash_data,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=INTEGER},
+      <if test="fabricBlockHash != null" >
+        #{fabricBlockHash,jdbcType=VARCHAR},
+      </if>
+      <if test="fabricBlockHeight != null" >
+        #{fabricBlockHeight,jdbcType=VARCHAR},
+      </if>
+      <if test="fabricHash != null" >
+        #{fabricHash,jdbcType=VARCHAR},
+      </if>
+      <if test="fabricUuid != null" >
+        #{fabricUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="fabricBussType != null" >
+        #{fabricBussType,jdbcType=VARCHAR},
+      </if>
+      <if test="hashData != null" >
+        #{hashData,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ecochain.ledger.model.FabricBlockInfo" >
     update fabric_block_info
-    set fabric_hash = #{fabricHash,jdbcType=VARCHAR},
+    <set >
+      <if test="fabricBlockHash != null" >
+        fabric_block_hash = #{fabricBlockHash,jdbcType=VARCHAR},
+      </if>
+      <if test="fabricBlockHeight != null" >
+        fabric_block_height = #{fabricBlockHeight,jdbcType=VARCHAR},
+      </if>
+      <if test="fabricHash != null" >
+        fabric_hash = #{fabricHash,jdbcType=VARCHAR},
+      </if>
+      <if test="fabricUuid != null" >
+        fabric_uuid = #{fabricUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="fabricBussType != null" >
+        fabric_buss_type = #{fabricBussType,jdbcType=VARCHAR},
+      </if>
+      <if test="hashData != null" >
+        hash_data = #{hashData,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ecochain.ledger.model.FabricBlockInfo" >
+    update fabric_block_info
+    set fabric_block_hash = #{fabricBlockHash,jdbcType=VARCHAR},
+      fabric_block_height = #{fabricBlockHeight,jdbcType=VARCHAR},
+      fabric_hash = #{fabricHash,jdbcType=VARCHAR},
       fabric_uuid = #{fabricUuid,jdbcType=VARCHAR},
       fabric_buss_type = #{fabricBussType,jdbcType=VARCHAR},
       hash_data = #{hashData,jdbcType=VARCHAR},
@@ -38,15 +146,13 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select id, fabric_hash, fabric_uuid, fabric_buss_type, hash_data, create_time, modify_time, 
-    update_time
-    from fabric_block_info
-    where id = #{id,jdbcType=INTEGER}
+  <select id="getDataList10" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select * from fabric_block_info order by id desc  limit 0,#{rows} 
   </select>
-  <select id="selectAll" resultMap="BaseResultMap">
-    select id, fabric_hash, fabric_uuid, fabric_buss_type, hash_data, create_time, modify_time, 
-    update_time
-    from fabric_block_info
+  <select id="getBlockByHeight" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select * from fabric_block_info where fabric_block_height = #{block_height}
+  </select>
+  <select id="getBlockByFabricHash" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from fabric_block_info where fabric_hash = #{fabric_hash}
   </select>
 </mapper>
